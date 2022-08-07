@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "84753391147",
+    "project_id": "walton-habitat-app",
+    "storage_bucket": "walton-habitat-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:84753391147:android:d6629687cfbb15ef0e946e",
+        "android_client_info": {
+          "package_name": "app.waltonhabitat.whapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "84753391147-faqorclf5a774dons4pm3o1v1b78qr44.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKoH3FDdyOj2MOfY3L9RHSQzaHWJ-AB6I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "84753391147-faqorclf5a774dons4pm3o1v1b78qr44.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "84753391147-214i4snom38nmsom06fj0gk0k89t78q6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.waltonhabitat.whapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
