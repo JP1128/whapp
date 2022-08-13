@@ -26,7 +26,6 @@ class _LoginPageState extends State<LoginPage> {
           slivers: [
             const SliverToBoxAdapter(
               child: Padding(
-                // padding: EdgeInsets.symmetric(vertical: 50),
                 padding: EdgeInsets.symmetric(vertical: 50),
                 child: Center(
                   child: SizedBox.square(
