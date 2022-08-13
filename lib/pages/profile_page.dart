@@ -140,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Pair("Student ID", member.studentId),
                           Pair("Full name", member.fullName),
                           Pair("Homeroom", member.homeroom),
-                          Pair("Grade level", member.toString()),
+                          Pair("Grade level", member.gradeLevel.toString()),
                           Pair("Hispanic/Latino", boolToString(member.hispanic)),
                           Pair("Race", member.ethnicities?.join(", ")),
                           Pair("T-Shirt size", member.tShirtSize),
