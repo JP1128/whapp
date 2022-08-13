@@ -41,6 +41,15 @@ dependencies:
   firebase_auth: ^3.6.2
   cloud_firestore: ^3.4.3
   google_sign_in: ^5.4.0
+  cloud_firestore_odm: ^1.0.0-dev.25
+  json_annotation: ^4.6.0
+  firebase_storage: ^10.3.5
+  email_validator: '^2.1.16'
+
+  flutter_form_builder: ^7.5.0
+  form_builder_validators: ^8.3.0
+
+  flutter_typeahead: ^4.0.0
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +61,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  build_runner: ^2.2.0
+  cloud_firestore_odm_generator: ^1.0.0-dev.25
+  json_serializable: ^6.3.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -65,9 +77,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/habitat_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

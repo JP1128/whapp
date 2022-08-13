@@ -14,10 +14,3 @@ final inputFieldTextStyle = GoogleFonts.poppins(
   fontWeight: FontWeight.w400,
   color: Colors.black,
 );
-
-TextStyle poppins(double? fontSize, FontWeight? fontWeight) {
-  return GoogleFonts.poppins(
-    fontSize: fontSize ?? 12.0,
-    fontWeight: fontWeight ?? FontWeight.w400,
-  );
-}

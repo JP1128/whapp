@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:whapp/constants/style.dart';
+import 'package:get/get.dart';
+import 'package:whapp/constants/constants.dart';
+import 'package:whapp/constants/theme.dart';
+import 'package:whapp/controllers/auth_controller.dart';
+import 'package:whapp/widgets/input_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -10,115 +13,102 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  Widget _buildInputFieldContainer(TextField inputField) => Container(
-        height: 55.0,
-        alignment: Alignment.centerLeft,
-        decoration: inputBoxStyle,
-        child: inputField,
-      );
-
-  Widget _buildEmailInputField() => _buildInputFieldContainer(
-        TextField(
-          obscureText: false,
-          keyboardType: TextInputType.emailAddress,
-          style: inputFieldTextStyle,
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.only(top: 14.0),
-            prefixIcon: Icon(
-              Icons.email_outlined,
-              color: Colors.black45,
-            ),
-            hintText: 'Email address',
-          ),
-        ),
-      );
-
-  Widget _buildPasswordInputField() => _buildInputFieldContainer(
-        TextField(
-          obscureText: true,
-          keyboardType: TextInputType.visiblePassword,
-          style: inputFieldTextStyle,
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.only(top: 14.0),
-            prefixIcon: Icon(
-              Icons.lock_outline,
-              color: Colors.black,
-            ),
-            hintText: 'Password',
-          ),
-        ),
-      );
+  final AuthController ac = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    var emailController = TextEditingController();
-    var passwordController = TextEditingController();
-
     return Scaffold(
-      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       body: Container(
         height: double.infinity,
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30.0,
-          vertical: 50.0,
-        ),
+        padding: defaultPadding,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Welcome!',
-              style: poppins(33, FontWeight.w600),
-            ),
-            Text(
-              'Glad to have you on board',
-              style: poppins(20, FontWeight.w600),
-            ),
-            const SizedBox(height: 30.0),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildEmailInputField(),
-                const SizedBox(height: 10.0),
-                _buildPasswordInputField(),
-                Row(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () => print("Forgot Password Button Pressed"),
-                        child: Text(
-                          'Forgot Password?',
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                          ),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 60),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Center(
+                      child: SizedBox.square(
+                        dimension: 75,
+                        child: Image(
+                          image: AssetImage("assets/habitat_logo.png"),
+                          fit: BoxFit.cover,
                         ),
+                      ),
+                    ),
+                    const SizedBox(height: 50),
+                    Text(
+                      'Welcome Back!',
+                      style: Get.textTheme.displayLarge,
+                    ),
+                    Text(
+                      'Login with your email',
+                      style: Get.textTheme.displayMedium,
+                    ),
+                    const SizedBox(height: 30.0),
+                    AutofillGroup(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          EmailInputField(
+                            controller: ac.emailController,
+                            textInputAction: TextInputAction.next,
+                          ),
+                          const SizedBox(height: 10.0),
+                          PasswordInputField(
+                            controller: ac.passwordController,
+                            textInputAction: TextInputAction.done,
+                            autoFillHints: AutofillHints.password,
+                            confirmPassword: false,
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
+                                  onPressed: () => Get.toNamed("/forgot"),
+                                  child: Text(
+                                    'Forgot Password?',
+                                    style: Get.textTheme.titleSmall!.copyWith(color: primaryColor),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 30.0),
+                          ElevatedButton(
+                            onPressed: () => AuthController.instance.login(),
+                            child: const Text('Log In'),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 30.0),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 25.0),
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: const Color(0xFF3A3A3A),
-                      minimumSize: const Size.fromHeight(60),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    onPressed: () => print('Login Button Pressed'),
-                    child: Text(
-                      'Log in',
-                      style: poppins(15, FontWeight.w500),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Don't have an account?",
+                  style: Get.textTheme.titleSmall,
+                ),
+                TextButton(
+                  onPressed: () => Get.toNamed("/signup/1"),
+                  child: Text(
+                    "Create Account",
+                    style: Get.textTheme.titleSmall!.copyWith(
+                      color: primaryColor,
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ],
