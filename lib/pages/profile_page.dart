@@ -130,7 +130,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         title: "Contact Information",
                         entries: [
                           Pair("Cell phone", member.cellPhone),
-                          Pair("Address", breakAddress(member.address)),
+                          Pair("Address", member.address),
                         ],
                       ),
                       const SizedBox(height: 30),
