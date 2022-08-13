@@ -15,85 +15,75 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final AuthController ac = Get.find();
 
-  Rx<bool> typing = false.obs;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       body: Container(
         padding: defaultPadding,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: CustomScrollView(
-                physics: ClampingScrollPhysics(),
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 50),
-                      child: Center(
-                        child: SizedBox.square(
-                          dimension: 75,
-                          child: Image(
-                            image: AssetImage("assets/habitat_logo.png"),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 50),
+                child: Center(
+                  child: SizedBox.square(
+                    dimension: 75,
+                    child: Image(
+                      image: AssetImage("assets/habitat_logo.png"),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  SliverFillRemaining(
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Welcome Back!',
+                    style: Get.textTheme.displayLarge,
+                  ),
+                  Text(
+                    'Login with your email',
+                    style: Get.textTheme.displayMedium,
+                  ),
+                  const SizedBox(height: 30.0),
+                  AutofillGroup(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          'Welcome Back!',
-                          style: Get.textTheme.displayLarge,
+                        EmailInputField(
+                          controller: ac.emailController,
+                          textInputAction: TextInputAction.next,
                         ),
-                        Text(
-                          'Login with your email',
-                          style: Get.textTheme.displayMedium,
+                        const SizedBox(height: 10.0),
+                        PasswordInputField(
+                          controller: ac.passwordController,
+                          textInputAction: TextInputAction.done,
+                          autoFillHints: AutofillHints.password,
+                          confirmPassword: false,
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                onPressed: () => Get.toNamed("/forgot"),
+                                child: Text(
+                                  'Forgot Password?',
+                                  style: Get.textTheme.titleSmall!.copyWith(color: primaryColor),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 30.0),
-                        AutofillGroup(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              EmailInputField(
-                                controller: ac.emailController,
-                                textInputAction: TextInputAction.next,
-                              ),
-                              const SizedBox(height: 10.0),
-                              PasswordInputField(
-                                controller: ac.passwordController,
-                                textInputAction: TextInputAction.done,
-                                autoFillHints: AutofillHints.password,
-                                confirmPassword: false,
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    child: TextButton(
-                                      onPressed: () => Get.toNamed("/forgot"),
-                                      child: Text(
-                                        'Forgot Password?',
-                                        style: Get.textTheme.titleSmall!.copyWith(color: primaryColor),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 30.0),
-                              ElevatedButton(
-                                onPressed: () => AuthController.instance.login(),
-                                child: const Text('Log In'),
-                              ),
-                            ],
-                          ),
+                        ElevatedButton(
+                          onPressed: () => AuthController.instance.login(),
+                          child: const Text('Log In'),
                         ),
                       ],
                     ),
@@ -101,24 +91,26 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Don't have an account?",
-                  style: Get.textTheme.titleSmall,
-                ),
-                TextButton(
-                  onPressed: () => Get.toNamed("/signup/1"),
-                  child: Text(
-                    "Create Account",
-                    style: Get.textTheme.titleSmall!.copyWith(
-                      color: primaryColor,
+            SliverFillRemaining(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Don't have an account?",
+                    style: Get.textTheme.titleSmall,
+                  ),
+                  TextButton(
+                    onPressed: () => Get.toNamed("/signup/1"),
+                    child: Text(
+                      "Create Account",
+                      style: Get.textTheme.titleSmall!.copyWith(
+                        color: primaryColor,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),
