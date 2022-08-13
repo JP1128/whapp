@@ -23,15 +23,6 @@ String? boolToString(bool? boo) {
   return boo ? "yes" : "no";
 }
 
-String? breakAddress(String? address) {
-  if (address == null) {
-    return null;
-  }
-
-  var i = address.indexOf(',');
-  return "${address.substring(0, i)}\n${address.substring(i + 1)}";
-}
-
 void showError(String title, String message) {
   Get.snackbar(
     title,

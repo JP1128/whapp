@@ -71,7 +71,7 @@ ElevatedButtonThemeData elevatedButtonTheme = ElevatedButtonThemeData(
 OutlinedButtonThemeData outlinedButtonTheme = OutlinedButtonThemeData(
   style: ButtonStyle(
     foregroundColor: MaterialStateProperty.all(primaryColor),
-    textStyle: MaterialStateProperty.all(poppins(15, bold)),
+    textStyle: MaterialStateProperty.all(poppins(15, semiBold)),
     minimumSize: MaterialStateProperty.all(const Size.fromHeight(50.0)),
   ),
 );
