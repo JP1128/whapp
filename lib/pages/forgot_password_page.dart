@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:whapp/constants/constants.dart';
 import 'package:whapp/controllers/auth_controller.dart';
-import 'package:whapp/widgets/input_field.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -12,7 +13,9 @@ class ForgotPasswordPage extends StatefulWidget {
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  final AuthController ac = Get.find();
+  final AuthController _ac = Get.find();
+
+  final _fk = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +42,31 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   style: Get.textTheme.bodyMedium),
             ),
             const SizedBox(height: 50),
-            EmailInputField(
-              controller: ac.emailController,
-              textInputAction: TextInputAction.go,
+            FormBuilder(
+              child: FormBuilderTextField(
+                name: "email",
+                controller: _ac.emailController,
+                style: Get.textTheme.bodyMedium,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                textInputAction: TextInputAction.next,
+                autofillHints: const [AutofillHints.email],
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(label: Text("Email address")),
+                validator: FormBuilderValidators.compose(
+                  [
+                    FormBuilderValidators.required(errorText: "Enter your email address"),
+                    FormBuilderValidators.email(errorText: "Enter a valid email"),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () => ac.sendPasswordResetEmail(),
+              onPressed: () {
+                if (_fk.currentState!.validate()) {
+                  _ac.sendPasswordResetEmail();
+                }
+              },
               child: const Text("Send Reset Link"),
             ),
           ],

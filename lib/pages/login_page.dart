@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:whapp/constants/constants.dart';
 import 'package:whapp/constants/theme.dart';
 import 'package:whapp/controllers/auth_controller.dart';
-import 'package:whapp/widgets/input_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

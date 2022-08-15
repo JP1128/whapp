@@ -23,7 +23,6 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
-        leading: const BackButton(),
         actions: [
           IconButton(
             onPressed: () {},
@@ -53,9 +52,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       Center(
                         child: CircleAvatar(
-                          foregroundImage: NetworkImage(member.photoURL ?? ""),
+                          foregroundImage: NetworkImage(member.photoURL ?? "http://www.gravatar.com/avatar"),
                           backgroundColor: primaryColor,
-                          onForegroundImageError: (o, s) => print("${s}"),
                           radius: 75,
                         ),
                       ),
@@ -126,6 +124,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       InformationBlock(
                         title: "Contact Information",
                         entries: [
+                          Pair("Email address", member.emailAddress),
                           Pair("Cell phone", member.phoneNumber),
                           Pair("Address", member.streetAddress),
                         ],

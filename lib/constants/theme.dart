@@ -76,6 +76,13 @@ OutlinedButtonThemeData outlinedButtonTheme = OutlinedButtonThemeData(
   ),
 );
 
+BottomNavigationBarThemeData navigationBarThemeData = BottomNavigationBarThemeData(
+  selectedItemColor: primaryColor,
+  unselectedItemColor: primaryColor,
+  type: BottomNavigationBarType.shifting,
+  showUnselectedLabels: false,
+);
+
 ButtonThemeData buttonTheme = const ButtonThemeData();
 
 final ThemeData lightTheme = ThemeData(
@@ -98,5 +105,6 @@ final ThemeData lightTheme = ThemeData(
   inputDecorationTheme: inputDecorationTheme,
   elevatedButtonTheme: elevatedButtonTheme,
   outlinedButtonTheme: outlinedButtonTheme,
+  bottomNavigationBarTheme: navigationBarThemeData,
   buttonTheme: buttonTheme,
 );
