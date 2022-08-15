@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:whapp/constants/theme.dart';
+import 'package:whapp/controllers/events_controller.dart';
 import 'package:whapp/controllers/storage_controller.dart';
 import 'package:whapp/firebase_options.dart';
 import 'package:whapp/pages/forgot_password_page.dart';
 import 'package:whapp/pages/home_page.dart';
 import 'package:whapp/pages/login_page.dart';
-import 'package:whapp/pages/profile_page.dart';
+import 'package:whapp/pages/home_pages/profile_page.dart';
 import 'package:whapp/pages/signup_page.dart';
 import 'package:whapp/pages/splash_page.dart';
 import 'controllers/auth_controller.dart';
@@ -22,6 +23,7 @@ Future<void> main() async {
   ).then((value) {
     Get.put(AuthController());
     Get.put(StorageController());
+    Get.put(EventsController());
   });
 
   // Prevent landscape mode

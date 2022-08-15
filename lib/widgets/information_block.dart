@@ -51,7 +51,7 @@ class InformationBlock extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(fieldName, style: Get.textTheme.bodyMedium),
+                      Text(fieldName, style: Get.textTheme.titleSmall),
                       Text(
                         fieldValue ?? '-',
                         textAlign: TextAlign.right,

@@ -9,8 +9,10 @@ import 'package:get/get.dart';
 import 'package:whapp/constants/constants.dart';
 import 'package:whapp/constants/theme.dart';
 import 'package:whapp/controllers/auth_controller.dart';
-import 'package:whapp/models/event.dart';
-import 'package:whapp/pages/profile_page.dart';
+import 'package:whapp/models/events/event.dart';
+import 'package:whapp/pages/home_pages/event_page.dart';
+import 'package:whapp/pages/home_pages/history_page.dart';
+import 'package:whapp/pages/home_pages/profile_page.dart';
 import 'package:whapp/widgets/event_item.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,9 +28,9 @@ class _HomePageState extends State<HomePage> {
 
   final AuthController _ac = Get.find();
 
-  final pages = [
-    Text("Home TODO"),
-    Text("History TODO"),
+  final pages = <Widget>[
+    EventPage(),
+    HistoryPage(),
     ProfilePage(),
   ];
 

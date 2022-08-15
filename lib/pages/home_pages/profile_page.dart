@@ -125,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         title: "Contact Information",
                         entries: [
                           Pair("Email address", member.emailAddress),
-                          Pair("Cell phone", member.phoneNumber),
+                          Pair("Cell phone", parsePhoneNumber(member.phoneNumber)),
                           Pair("Address", member.streetAddress),
                         ],
                       ),
@@ -137,7 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Pair("Full name", member.fullName),
                           Pair("Homeroom", member.homeroom),
                           Pair("Grade level", member.gradeLevel.toString()),
-                          Pair("T-Shirt size", member.tShirtSize),
+                          Pair("T-Shirt size", member.tShirtSize.toUpperCase()),
                         ],
                       ),
                       const SizedBox(height: 50),

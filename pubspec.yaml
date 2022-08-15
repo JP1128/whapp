@@ -51,6 +51,9 @@ dependencies:
 
   flutter_typeahead: ^4.0.0
 
+  async: 
+  intl: 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

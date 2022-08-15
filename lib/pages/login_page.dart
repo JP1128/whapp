@@ -16,9 +16,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final AuthController _ac = Get.find();
   final _hidePassword = true.obs;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: defaultPadding,
         child: CustomScrollView(

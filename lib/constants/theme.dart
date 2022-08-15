@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:whapp/constants/style.dart';
 
 const Color primaryColor = Color(0xFF48CAE4);
 const Color errorColor = Color(0xFFBD4747);
@@ -81,6 +80,7 @@ BottomNavigationBarThemeData navigationBarThemeData = BottomNavigationBarThemeDa
   unselectedItemColor: primaryColor,
   type: BottomNavigationBarType.shifting,
   showUnselectedLabels: false,
+  selectedLabelStyle: poppins(12, regular),
 );
 
 ButtonThemeData buttonTheme = const ButtonThemeData();

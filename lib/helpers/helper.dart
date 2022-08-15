@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:whapp/constants/theme.dart';
 
 String getRoleName(int role) {
@@ -21,6 +22,38 @@ String? boolToString(bool? boo) {
   }
 
   return boo ? "yes" : "no";
+}
+
+String formatDate(DateTime dateTime, String formatter) {
+  return DateFormat(formatter).format(dateTime);
+}
+
+String weekday(int weekday) {
+  switch (weekday) {
+    case 1:
+      return "Monday";
+    case 2:
+      return "Tuesday";
+    case 3:
+      return "Wedsneday";
+    case 4:
+      return "Thursday";
+    case 5:
+      return "Friday";
+    case 6:
+      return "Saturday";
+    case 7:
+      return "Sunday";
+    default:
+      throw Exception();
+  }
+}
+
+String parsePhoneNumber(String phoneNumber) {
+  var a = phoneNumber.substring(0, 3);
+  var b = phoneNumber.substring(3, 6);
+  var c = phoneNumber.substring(6);
+  return "$a-$b-$c";
 }
 
 void showError(String title, String message) {
