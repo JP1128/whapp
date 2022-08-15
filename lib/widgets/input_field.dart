@@ -1,5 +1,6 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:whapp/controllers/auth_controller.dart';
 
@@ -22,8 +23,10 @@ class _EmailInputFieldState extends State<EmailInputField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    return FormBuilderTextField(
+      name: "email",
       style: Get.textTheme.bodyMedium,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       textInputAction: widget.textInputAction,
       controller: widget.controller,
       autofillHints: const [AutofillHints.email],

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:whapp/constants/constants.dart';
+import 'package:whapp/constants/theme.dart';
 import 'package:whapp/controllers/auth_controller.dart';
 import 'package:whapp/models/event.dart';
 import 'package:whapp/widgets/event_item.dart';
@@ -21,6 +23,8 @@ class _HomePageState extends State<HomePage> {
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  final AuthController _ac = Get.find();
+
   @override
   void initState() {
     super.initState();
@@ -30,33 +34,21 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: const EdgeInsets.symmetric(
-          vertical: 50,
-          horizontal: 30,
-        ),
+        padding: defaultPadding,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 GestureDetector(
-                  child: FutureBuilder<String>(
-                    future: _storage.ref().child('pp/pp.jpg').getDownloadURL(),
-                    builder: ((context, snapshot) {
-                      if (snapshot.hasData) {
-                        var data = snapshot.data!;
-                        return CircleAvatar(
-                          backgroundImage: NetworkImage(data),
-                        );
-                      }
-                      return CircleAvatar();
-                    }),
-                  ),
+                  child: CircleAvatar(backgroundColor: primaryColor),
                   onTap: () => Get.toNamed("/profile"),
                 ),
               ],
             ),
+            ElevatedButton(onPressed: () => _ac.logout(), child: Text("Logout")),
           ],
         ),
       ),

@@ -16,12 +16,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final AuthController authController = AuthController.instance;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  final AuthController _ac = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
       body: FutureBuilder<Member?>(
-        future: authController.getMember,
+        future: _ac.getMember,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var member = snapshot.data!;
@@ -58,7 +53,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       Center(
                         child: CircleAvatar(
-                          backgroundImage: NetworkImage(member.photoURL),
+                          foregroundImage: NetworkImage(member.photoURL ?? ""),
+                          backgroundColor: primaryColor,
+                          onForegroundImageError: (o, s) => print("${s}"),
                           radius: 75,
                         ),
                       ),
@@ -81,7 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  member.points.toString(),
+                                  member.points == 0 ? "-" : member.points.toString(),
                                   style: Get.textTheme.titleMedium,
                                 ),
                                 Text(
@@ -97,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  member.minutes.toString(),
+                                  member.minutes == 0 ? "-" : member.minutes.toString(),
                                   style: Get.textTheme.titleMedium,
                                 ),
                                 Text(
@@ -113,7 +110,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "\$${member.collection.toString()}",
+                                  member.collection == 0 ? "-" : "\$${member.collection.toString()}",
                                   style: Get.textTheme.titleMedium,
                                 ),
                                 Text(
@@ -129,8 +126,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       InformationBlock(
                         title: "Contact Information",
                         entries: [
-                          Pair("Cell phone", member.cellPhone),
-                          Pair("Address", member.address),
+                          Pair("Cell phone", member.phoneNumber),
+                          Pair("Address", member.streetAddress),
                         ],
                       ),
                       const SizedBox(height: 30),
@@ -141,19 +138,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           Pair("Full name", member.fullName),
                           Pair("Homeroom", member.homeroom),
                           Pair("Grade level", member.gradeLevel.toString()),
-                          Pair("Hispanic/Latino", boolToString(member.hispanic)),
-                          Pair("Race", member.ethnicities?.join(", ")),
                           Pair("T-Shirt size", member.tShirtSize),
-                        ],
-                      ),
-                      const SizedBox(height: 30),
-                      InformationBlock(
-                        title: "Primary Parent Information",
-                        entries: [
-                          Pair("Full name", member.primaryParent?.fullName),
-                          Pair("Email", member.primaryParent?.emailAddress),
-                          Pair("Cell phone", member.primaryParent?.cellPhone),
-                          Pair("Work", member.primaryParent?.work),
                         ],
                       ),
                       const SizedBox(height: 50),
@@ -162,7 +147,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           minimumSize: const Size.fromHeight(50),
                           primary: const Color(0xFFBD4747),
                         ),
-                        onPressed: () => authController.logout(),
+                        onPressed: () => _ac.logout(),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,

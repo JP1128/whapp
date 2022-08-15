@@ -1,21 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore_odm/annotation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:whapp/helpers/helper.dart';
 import 'package:whapp/models/member.dart';
-import 'package:whapp/models/parent.dart';
-import 'package:whapp/pages/home_page.dart';
-import 'package:whapp/pages/login_page.dart';
 
 class AuthController extends GetxController {
   static final AuthController instance = Get.find();
 
+  // Login & Registration
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+
+  // Registration
+  // Student information
+  String? fullName;
+  String? studentId;
+  String? homeroom;
+  int? gradeLevel;
+
+  // Contact information
+  String? phoneNumber;
+  String? streetAddress;
+  String? tShirtSize;
 
   final _auth = FirebaseAuth.instance;
   final _db = FirebaseFirestore.instance;
@@ -26,7 +34,7 @@ class AuthController extends GetxController {
   void onReady() {
     super.onReady();
     firebaseUser = Rx<User?>(_auth.currentUser);
-    firebaseUser.bindStream(_auth.userChanges());
+    firebaseUser.bindStream(_auth.authStateChanges());
     ever(firebaseUser, _initialScreen);
   }
 
@@ -51,54 +59,65 @@ class AuthController extends GetxController {
     var user = firebaseUser.value;
 
     if (user != null) {
-      var uid = user.uid;
-      return _db //
+      return await _db //
           .collection('members')
-          .doc(uid.toString())
+          .doc(user.uid.toString())
           .get()
-          .then((data) {
-        var parentData = data['primaryParent'];
-        var parent = parentData != null
-            ? Parent(
-                fullName: parentData['fullName'],
-                emailAddress: parentData['emailAddress'],
-                cellPhone: parentData['cellPhone'],
-                work: parentData['work'],
-              )
-            : null;
+          .then((data) => Member(
+                uid: user.uid,
+                emailAddress: user.email!, // signed in
+                photoURL: user.photoURL,
+                role: data['role'],
 
-        var ethnicitiesData = data['ethnicities'];
-        var ethnicities = ethnicitiesData is Iterable //
-            ? List<String>.from(ethnicitiesData)
-            : null;
+                points: data['points'],
+                minutes: data['minutes'],
+                collection: data['collection'].toDouble(),
 
-        return Member(
-          uid: uid,
-          emailAddress: user.email!,
-          photoURL: user.photoURL!,
-          points: data['points'],
-          minutes: data['minutes'],
-          collection: data['collection'].toDouble(),
-          role: data['role'],
-          fullName: data['fullName'],
-          studentId: data['studentId'],
-          homeroom: data['homeroom'],
-          gradeLevel: data['gradeLevel'],
-          hispanic: data['hispanic'],
-          ethnicities: ethnicities,
-          cellPhone: data['cellPhone'],
-          address: data['address'],
-          primaryParent: parent,
-          tShirtSize: data['tShirtSize'],
-          tShirtReceived: data['tShirtReceived'],
-          duesPaid: data['duesPaid'],
-        );
-      });
+                fullName: data['fullName'],
+                studentId: data['studentId'],
+                homeroom: data['homeroom'],
+                gradeLevel: data['gradeLevel'],
+
+                phoneNumber: data['phoneNumber'],
+                streetAddress: data['streetAddress'],
+
+                tShirtSize: data['tShirtSize'],
+                tShirtReceived: data['tShirtReceived'],
+                duesPaid: data['duesPaid'],
+              ));
     }
 
     return Future.error(
       Exception('Could not retrieve member instance associated with the current user'),
     );
+  }
+
+  Future<void> createMember(Member member) async {
+    var user = firebaseUser.value;
+
+    if (user != null) {
+      await _db //
+          .collection('members')
+          .doc(user.uid.toString())
+          .set({
+        "uid": user.uid,
+        "emailAddress": member.emailAddress,
+        "photoURL": member.photoURL,
+        "role": member.role,
+        "points": member.points,
+        "minutes": member.minutes,
+        "collection": member.collection,
+        "fullName": member.fullName,
+        "studentId": member.studentId,
+        "homeroom": member.homeroom,
+        "gradeLevel": member.gradeLevel,
+        "phoneNumber": member.phoneNumber,
+        "streetAddress": member.streetAddress,
+        "tShirtSize": member.tShirtSize,
+        "tShirtReceived": member.tShirtReceived,
+        "duesPaid": member.duesPaid,
+      });
+    }
   }
 
   Future<void> login() async {
@@ -107,8 +126,6 @@ class AuthController extends GetxController {
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-      emailController.clear();
-      passwordController.clear();
     } on FirebaseAuthException catch (e) {
       showError("Login failed", e.message ?? "");
     }
@@ -116,10 +133,29 @@ class AuthController extends GetxController {
 
   Future<void> createAccount() async {
     try {
-      await _auth.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
+      await _auth
+          .createUserWithEmailAndPassword(
+            email: emailController.text.trim(),
+            password: passwordController.text.trim(),
+          )
+          .then((uc) => createMember(Member(
+                uid: uc.user!.uid,
+                emailAddress: uc.user!.email!,
+                photoURL: uc.user!.photoURL,
+                role: 3,
+                points: 0,
+                minutes: 0,
+                collection: 0,
+                fullName: fullName!,
+                studentId: studentId!,
+                homeroom: homeroom!,
+                gradeLevel: gradeLevel!,
+                phoneNumber: phoneNumber!,
+                streetAddress: streetAddress!,
+                tShirtSize: tShirtSize!,
+                tShirtReceived: false,
+                duesPaid: false,
+              )));
     } on FirebaseAuthException catch (e) {
       showError("Account creation failed", e.message ?? "");
     }

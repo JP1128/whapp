@@ -75,5 +75,9 @@ void showSuccess(String title, String message) {
   );
 }
 
+String? Function(String?) valueMatch(RegExp regex, String errorMessage) {
+  return (String? val) => val == null || regex.hasMatch(val) ? null : errorMessage;
+}
+
 final RegExp nameRegExp = RegExp(r"^[a-z-]{2,}( [a-z-]{2,})+$", caseSensitive: false);
 final RegExp homeroomNameRegExp = RegExp(r"^(dr|mrs?|ms)\. [a-z]{2,}", caseSensitive: false);
