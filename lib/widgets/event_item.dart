@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:whapp/constants/constants.dart';
 import 'package:whapp/constants/theme.dart';
 import 'package:whapp/helpers/helper.dart';
 import 'package:whapp/models/events/attendance.dart';
@@ -20,30 +21,11 @@ class EventItem extends StatefulWidget {
 
 class _EventItemState extends State<EventItem> {
   late Event _event;
-  late CircleAvatar _avatar;
 
   @override
   void initState() {
     super.initState();
     _event = widget.event;
-
-    if (_event is VolunteerEvent) {
-      _avatar = const CircleAvatar(
-        backgroundColor: Color(0xFFB3EFB8),
-        child: Icon(
-          Icons.volunteer_activism_rounded,
-          color: Color(0xFF39A542),
-        ),
-      );
-    } else if (_event is AttendanceEvent) {
-      _avatar = const CircleAvatar(
-        backgroundColor: Color(0xFFF3F1B3),
-        child: Icon(
-          Icons.check_rounded,
-          color: Color(0xFFC1BD58),
-        ),
-      );
-    }
   }
 
   @override
@@ -65,9 +47,13 @@ class _EventItemState extends State<EventItem> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _avatar,
+              _event is VolunteerEvent //
+                  ? volunteerAvatar
+                  : (_event is AttendanceEvent //
+                      ? attendanceAvatar
+                      : CircleAvatar()),
               const SizedBox(width: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,14 +73,14 @@ class _EventItemState extends State<EventItem> {
                     children: [
                       Icon(
                         Icons.access_time_outlined,
-                        color: palette[6],
+                        color: _event.end.isBefore(DateTime.now()) ? errorColor : palette[6],
                         size: 15,
                       ),
                       const SizedBox(width: 5),
                       Text(
                         "${formatDate(_event.start, 'jm')} - ${formatDate(_event.end, 'jm')}",
                         style: Get.textTheme.bodySmall!.copyWith(
-                          color: palette[6],
+                          color: _event.end.isBefore(DateTime.now()) ? errorColor : palette[6],
                         ),
                       )
                     ],

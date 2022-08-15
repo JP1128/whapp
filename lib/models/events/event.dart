@@ -1,3 +1,8 @@
+enum EventType {
+  volunteer,
+  attendance,
+}
+
 class Event {
   Event({
     required this.boardOnly,

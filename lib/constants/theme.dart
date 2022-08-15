@@ -4,6 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 const Color primaryColor = Color(0xFF48CAE4);
 const Color errorColor = Color(0xFFBD4747);
 const Color successColor = Color(0xFF54CB5E);
+
+const Color onVolunteerColor = Color(0xFF5D9562);
+const Color volunteerColor = Color(0xFFE7F0E8);
+
+const Color onAttendanceColor = Color(0xFFA3AD41);
+const Color attendanceColor = Color(0xFFE6EAC7);
+
 const List<Color> palette = [
   Color(0xFFFCFCFC),
   Color(0xFFF8F9FA),
@@ -80,7 +87,7 @@ BottomNavigationBarThemeData navigationBarThemeData = BottomNavigationBarThemeDa
   unselectedItemColor: primaryColor,
   type: BottomNavigationBarType.shifting,
   showUnselectedLabels: false,
-  selectedLabelStyle: poppins(12, regular),
+  selectedLabelStyle: poppins(10, regular),
 );
 
 ButtonThemeData buttonTheme = const ButtonThemeData();

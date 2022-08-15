@@ -11,6 +11,26 @@ class EventsController extends GetxController {
 
   final _db = FirebaseFirestore.instance;
 
+  EventType? eventType;
+
+  // General event information
+  bool? boardOnly;
+  String? title;
+  String? description;
+  String? location;
+  DateTime? start;
+  DateTime? end;
+
+  // Volunteer specific information
+  int? capacity;
+  int? pointCost;
+  int? minMinutes;
+  int? minCollection;
+  double? totalRaised;
+
+  // Attendance specific information
+  int? pointReward;
+
   Future<void> createVolunteerEvent(VolunteerEvent event) async {
     await _db //
         .collection("volunteerEvents")
@@ -44,12 +64,14 @@ class EventsController extends GetxController {
   }
 
   Stream<List<VolunteerEvent>> getVolunteerEvents() {
-    var now = DateTime.now();
-    var today = Timestamp.fromDate(DateTime(now.year, now.month, now.day));
-
     return _db //
         .collection("volunteerEvents")
-        .where("start", isGreaterThanOrEqualTo: today)
+        .where(
+          "start",
+          isGreaterThanOrEqualTo: Timestamp.fromDate(
+            DateTime.now().subtract(const Duration(days: 1)),
+          ),
+        )
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) {
               var data = doc.data();
@@ -73,12 +95,14 @@ class EventsController extends GetxController {
   }
 
   Stream<List<AttendanceEvent>> getAttendanceEvent() {
-    var now = DateTime.now();
-    var today = Timestamp.fromDate(DateTime(now.year, now.month, now.day));
-
     return _db //
         .collection("attendanceEvents")
-        .where("start", isGreaterThanOrEqualTo: today)
+        .where(
+          "start",
+          isGreaterThanOrEqualTo: Timestamp.fromDate(
+            DateTime.now().subtract(const Duration(days: 1)),
+          ),
+        )
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) {
               var data = doc.data();

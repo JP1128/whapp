@@ -7,6 +7,8 @@ import 'package:whapp/constants/constants.dart';
 import 'package:whapp/controllers/events_controller.dart';
 import 'package:whapp/models/events/event.dart';
 import 'package:whapp/models/events/volunteer.dart';
+import 'package:whapp/pages/home_pages/event_creation_page.dart';
+import 'package:whapp/pages/home_pages/event_detail_page.dart';
 import 'package:whapp/widgets/event_item.dart';
 
 class EventPage extends StatefulWidget {
@@ -26,7 +28,10 @@ class _EventPageState extends State<EventPage> {
         title: const Text("Explore"),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => Get.to(
+              () => EventCreationPage(),
+              transition: Transition.downToUp,
+            ),
             icon: const Icon(Icons.add_outlined),
           ),
         ],
@@ -49,11 +54,14 @@ class _EventPageState extends State<EventPage> {
           ];
 
           return ListView.separated(
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30.0),
+            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
             itemCount: stream.length,
             itemBuilder: ((context, index) {
               var event = stream[index];
-              return EventItem(event: event);
+              return GestureDetector(
+                child: EventItem(event: event),
+                onTap: () => Get.to(() => EventDetailPage(event: event)),
+              );
             }),
             separatorBuilder: (context, index) => const SizedBox(height: 20),
           );
