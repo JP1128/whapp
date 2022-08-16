@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:whapp/constants/constants.dart';
 import 'package:whapp/constants/theme.dart';
 import 'package:whapp/helpers/algolia_service.dart';
+import 'package:whapp/pages/new_profile_page.dart';
 import 'package:whapp/widgets/member_item.dart';
 
 class SearchPage extends StatefulWidget {
@@ -36,8 +37,7 @@ class _SearchPageState extends State<SearchPage> {
               controller: search,
               style: Get.textTheme.bodySmall,
               textCapitalization: TextCapitalization.words,
-              textInputAction: TextInputAction.next,
-              autofillHints: const [AutofillHints.name],
+              textInputAction: TextInputAction.done,
               keyboardType: TextInputType.name,
               decoration: const InputDecoration(
                 suffixIcon: Icon(Icons.search_rounded),
@@ -85,7 +85,7 @@ class _SearchPageState extends State<SearchPage> {
                           phoneNumber: data['phoneNumber'],
                           emailAddress: data['emailAddress'],
                         ),
-                        onTap: () => Get.to(() => Text("")),
+                        onTap: () => Get.to(() => NewProfilePage(uid: data['objectID'])),
                       );
                     },
                     separatorBuilder: (context, index) {

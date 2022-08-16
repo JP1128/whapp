@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:whapp/constants/theme.dart';
 import 'package:whapp/controllers/events_controller.dart';
 import 'package:whapp/controllers/storage_controller.dart';
+import 'package:whapp/controllers/store_controller.dart';
 import 'package:whapp/firebase_options.dart';
 import 'package:whapp/pages/forgot_password_page.dart';
 import 'package:whapp/pages/home_page.dart';
@@ -25,6 +26,7 @@ Future<void> main() async {
     Get.put(AuthController());
     Get.put(StorageController());
     Get.put(EventsController());
+    Get.put(StoreController());
   });
 
   // Prevent landscape mode

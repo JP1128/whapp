@@ -92,6 +92,10 @@ BottomNavigationBarThemeData navigationBarThemeData = BottomNavigationBarThemeDa
 
 ButtonThemeData buttonTheme = const ButtonThemeData();
 
+ChipThemeData chipTheme = ChipThemeData(
+  labelStyle: poppins(12, medium),
+);
+
 final ThemeData lightTheme = ThemeData(
   appBarTheme: appBarTheme,
   brightness: Brightness.light,
@@ -114,4 +118,5 @@ final ThemeData lightTheme = ThemeData(
   outlinedButtonTheme: outlinedButtonTheme,
   bottomNavigationBarTheme: navigationBarThemeData,
   buttonTheme: buttonTheme,
+  chipTheme: chipTheme,
 );

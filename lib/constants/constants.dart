@@ -22,3 +22,13 @@ const CircleAvatar attendanceAvatar = CircleAvatar(
     color: onAttendanceColor,
   ),
 );
+
+const Chip paidDuesChip = Chip(
+  label: Text("Paid Dues", style: TextStyle(color: onAttendanceColor)),
+  backgroundColor: attendanceColor,
+);
+
+const Chip tShirtReceivedChip = Chip(
+  label: Text("T-Shirt Received", style: TextStyle(color: onVolunteerColor)),
+  backgroundColor: volunteerColor,
+);
