@@ -114,7 +114,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                     ],
                   ),
                   const SizedBox(height: 30),
-                  Text("Description", style: Get.textTheme.titleSmall),
+                  Text("Description", style: Get.textTheme.titleMedium),
                 ],
               ),
             ),
