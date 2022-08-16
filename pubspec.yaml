@@ -54,6 +54,8 @@ dependencies:
   async: 
   intl: 
 
+  syncfusion_flutter_datepicker: ^20.2.43
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

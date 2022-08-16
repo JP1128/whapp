@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:whapp/models/events/attendance.dart';
 import 'package:whapp/models/events/event.dart';
 import 'package:whapp/models/events/volunteer.dart';
@@ -11,10 +12,12 @@ class EventsController extends GetxController {
 
   final _db = FirebaseFirestore.instance;
 
+  final dateController = DateRangePickerController();
+
   EventType? eventType;
 
   // General event information
-  bool? boardOnly;
+  bool boardOnly = false;
   String? title;
   String? description;
   String? location;
@@ -26,40 +29,58 @@ class EventsController extends GetxController {
   int? pointCost;
   int? minMinutes;
   int? minCollection;
-  double? totalRaised;
 
   // Attendance specific information
   int? pointReward;
 
-  Future<void> createVolunteerEvent(VolunteerEvent event) async {
+  void clear() {
+    dateController.selectedDate = null;
+    eventType = null;
+
+    boardOnly = false;
+    title = null;
+    description = null;
+    location = null;
+    start = null;
+    end = null;
+
+    capacity = null;
+    pointCost = null;
+    minMinutes = null;
+    minCollection = null;
+
+    pointReward = null;
+  }
+
+  Future<void> createVolunteerEvent() async {
     await _db //
         .collection("volunteerEvents")
         .add({
-      "boardOnly": event.boardOnly,
-      "title": event.title,
-      "description": event.description,
-      "location": event.location,
-      "start": event.start,
-      "end": event.end,
-      "capacity": event.capacity,
-      "pointCost": event.pointCost,
-      "minMinutes": event.minMinutes,
-      "minCollection": event.minCollection,
-      "totalRaised": event.totalRaised,
+      "boardOnly": boardOnly,
+      "title": title!,
+      "description": description!,
+      "location": location!,
+      "start": start!,
+      "end": end!,
+      "capacity": capacity,
+      "pointCost": pointCost,
+      "minMinutes": minMinutes,
+      "minCollection": minCollection,
+      "totalRaised": null,
     });
   }
 
-  Future<void> createAttendanceEvent(AttendanceEvent event) async {
+  Future<void> createAttendanceEvent() async {
     await _db //
         .collection("attendanceEvents")
         .add({
-      "boardOnly": event.boardOnly,
-      "title": event.title,
-      "description": event.description,
-      "location": event.location,
-      "start": event.start,
-      "end": event.end,
-      "pointReward": event.pointReward,
+      "boardOnly": boardOnly,
+      "title": title!,
+      "description": description!,
+      "location": location!,
+      "start": start!,
+      "end": end!,
+      "pointReward": pointReward,
     });
   }
 

@@ -16,7 +16,7 @@ class VolunteerEvent extends Event {
     required this.totalRaised,
   });
 
-  int capacity;
+  int? capacity;
 
   int? pointCost;
   int? minMinutes;

@@ -11,5 +11,5 @@ class AttendanceEvent extends Event {
     required this.pointReward,
   });
 
-  int pointReward;
+  int? pointReward;
 }
