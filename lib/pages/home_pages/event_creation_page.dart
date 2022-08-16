@@ -500,7 +500,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
                                 break;
                             }
 
-                            Get.offAndToNamed("/home");
+                            Get.back();
                           }
                         },
                         child: const Text("Create Event"),

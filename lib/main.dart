@@ -8,6 +8,7 @@ import 'package:whapp/controllers/storage_controller.dart';
 import 'package:whapp/firebase_options.dart';
 import 'package:whapp/pages/forgot_password_page.dart';
 import 'package:whapp/pages/home_page.dart';
+import 'package:whapp/pages/home_pages/event_creation_page.dart';
 import 'package:whapp/pages/login_page.dart';
 import 'package:whapp/pages/home_pages/profile_page.dart';
 import 'package:whapp/pages/signup_page.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
           page: () => const SignupPage(),
           transition: Transition.downToUp,
         ),
+        GetPage(name: '/create_event', page: () => EventCreationPage()),
         GetPage(name: '/forgot', page: () => const ForgotPasswordPage()),
         GetPage(name: '/home', page: () => const HomePage()),
         GetPage(name: '/profile', page: () => const ProfilePage()),

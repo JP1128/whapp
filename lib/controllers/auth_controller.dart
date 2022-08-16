@@ -29,13 +29,17 @@ class AuthController extends GetxController {
   final _db = FirebaseFirestore.instance;
 
   late Rx<User?> firebaseUser;
+  late Rx<Member?> member;
 
   @override
-  void onReady() {
+  void onReady() async {
     super.onReady();
     firebaseUser = Rx<User?>(_auth.currentUser);
     firebaseUser.bindStream(_auth.authStateChanges());
-    ever(firebaseUser, _initialScreen);
+    ever(firebaseUser, _handleAuthStateChanges);
+
+    member = Rx<Member?>(null);
+    member.bindStream(streamMember);
   }
 
   @override
@@ -45,7 +49,7 @@ class AuthController extends GetxController {
     passwordController.dispose();
   }
 
-  _initialScreen(User? user) {
+  _handleAuthStateChanges(User? user) async {
     if (user == null) {
       Get.offAllNamed('/login');
     } else {
@@ -54,6 +58,41 @@ class AuthController extends GetxController {
   }
 
   Future<User?> get getUser async => _auth.currentUser;
+
+  Stream<Member?> get streamMember {
+    var user = firebaseUser.value;
+
+    if (user != null) {
+      return _db //
+          .collection("members")
+          .doc(firebaseUser.value!.uid)
+          .snapshots()
+          .map((data) => Member(
+                uid: user.uid,
+                emailAddress: user.email!, // signed in
+                photoURL: user.photoURL,
+                role: data['role'],
+
+                points: data['points'],
+                minutes: data['minutes'],
+                collection: data['collection'].toDouble(),
+
+                fullName: data['fullName'],
+                studentId: data['studentId'],
+                homeroom: data['homeroom'],
+                gradeLevel: data['gradeLevel'],
+
+                phoneNumber: data['phoneNumber'],
+                streetAddress: data['streetAddress'],
+
+                tShirtSize: data['tShirtSize'],
+                tShirtReceived: data['tShirtReceived'],
+                duesPaid: data['duesPaid'],
+              ));
+    }
+
+    return Stream.empty();
+  }
 
   Future<Member?> get getMember async {
     var user = firebaseUser.value;

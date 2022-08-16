@@ -58,7 +58,7 @@ class EventsController extends GetxController {
         .add({
       "boardOnly": boardOnly,
       "title": title!,
-      "description": description!,
+      "description": description,
       "location": location!,
       "start": start!,
       "end": end!,
@@ -76,7 +76,7 @@ class EventsController extends GetxController {
         .add({
       "boardOnly": boardOnly,
       "title": title!,
-      "description": description!,
+      "description": description,
       "location": location!,
       "start": start!,
       "end": end!,

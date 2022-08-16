@@ -16,7 +16,7 @@ class Event {
   bool boardOnly;
 
   String title;
-  String description;
+  String? description;
   String location;
 
   DateTime start;

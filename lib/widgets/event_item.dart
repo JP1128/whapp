@@ -85,23 +85,23 @@ class _EventItemState extends State<EventItem> {
                       )
                     ],
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.place_outlined,
-                        color: palette[6],
-                        size: 15,
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        _event.location,
-                        style: Get.textTheme.bodySmall!.copyWith(
-                          color: palette[6],
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Row(
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     Icon(
+                  //       Icons.place_outlined,
+                  //       color: palette[6],
+                  //       size: 15,
+                  //     ),
+                  //     const SizedBox(width: 5),
+                  //     Text(
+                  //       _event.location,
+                  //       style: Get.textTheme.bodySmall!.copyWith(
+                  //         color: palette[6],
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ],
