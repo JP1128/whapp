@@ -45,6 +45,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
             child: Container(
               padding: defaultPadding,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (_event.boardOnly)
                     Text(
@@ -55,7 +56,25 @@ class _EventDetailPageState extends State<EventDetailPage> {
                     ),
                   Text(
                     _event.title,
-                    style: Get.textTheme.displayMedium,
+                    style: Get.textTheme.displayLarge,
+                  ),
+                  Divider(),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.place_outlined,
+                        color: palette[7],
+                        size: 20,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        _event.location,
+                        style: Get.textTheme.bodyMedium!.copyWith(
+                          color: palette[7],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
