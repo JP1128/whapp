@@ -12,6 +12,9 @@ jobs:
         - uses: subosito/flutter-action@v1
           with:
             channel: 'dev'
+            flutter-version: '3.0.5'
+            dart-version: '2.17.5'
+
 
         # Build Website
         - name: Build Website

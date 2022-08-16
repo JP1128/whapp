@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:whapp/constants/constants.dart';
 import 'package:whapp/constants/theme.dart';
 import 'package:whapp/controllers/auth_controller.dart';
+import 'package:whapp/helpers/helper.dart';
 import 'package:whapp/models/events/event.dart';
 
 class EventDetailPage extends StatefulWidget {
@@ -63,19 +64,57 @@ class _EventDetailPageState extends State<EventDetailPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(
+                        Icons.calendar_month_rounded,
+                        color: palette[6],
+                        size: 20,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        formatDate(_event.start, "MMMM d, EEEE"),
+                        style: Get.textTheme.bodyMedium!.copyWith(
+                          color: palette[6],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.access_time_rounded,
+                        color: palette[6],
+                        size: 20,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        "${formatDate(_event.start, 'jm')} - ${formatDate(_event.end, 'jm')}",
+                        style: Get.textTheme.bodyMedium!.copyWith(
+                          color: palette[6],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
                         Icons.place_outlined,
-                        color: palette[7],
+                        color: palette[6],
                         size: 20,
                       ),
                       const SizedBox(width: 5),
                       Text(
                         _event.location,
                         style: Get.textTheme.bodyMedium!.copyWith(
-                          color: palette[7],
+                          color: palette[6],
                         ),
                       ),
                     ],
                   ),
+                  const SizedBox(height: 30),
+                  Text("Description", style: Get.textTheme.titleSmall),
                 ],
               ),
             ),
