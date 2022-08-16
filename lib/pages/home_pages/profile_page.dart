@@ -39,6 +39,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
         var member = _ac.member.value!;
 
+        showSuccess("Success", "Loaded");
+
         return ShaderMask(
           shaderCallback: (rect) => const LinearGradient(
             begin: Alignment.topCenter,
