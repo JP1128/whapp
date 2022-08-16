@@ -52,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       Center(
                         child: CircleAvatar(
-                          foregroundImage: NetworkImage(member.photoURL ?? "http://www.gravatar.com/avatar"),
+                          // foregroundImage: NetworkImage(member.photoURL ?? "http://www.gravatar.com/avatar"),
                           backgroundColor: primaryColor,
                           radius: 75,
                         ),

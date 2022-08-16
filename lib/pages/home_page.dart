@@ -26,11 +26,6 @@ class _HomePageState extends State<HomePage> {
   var index = 0.obs;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Obx(() => BottomNavigationBar(

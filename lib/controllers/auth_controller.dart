@@ -28,9 +28,14 @@ class AuthController extends GetxController {
   String? streetAddress;
   String? tShirtSize;
 
-  Rx<Member?> member = Rx<Member?>(null);
-
   late Rx<User?> firebaseUser;
+  late Rx<Member?> member;
+
+  @override
+  void onInit() {
+    super.onInit();
+    member = Rx<Member?>(null);
+  }
 
   @override
   void onReady() async {
@@ -38,12 +43,6 @@ class AuthController extends GetxController {
     firebaseUser = Rx<User?>(_auth.currentUser);
     firebaseUser.bindStream(_auth.authStateChanges());
     ever(firebaseUser, _handleAuthStateChanges);
-
-    _auth.userChanges().listen((user) async {
-      if (user != null) {
-        member.value = await getMember;
-      }
-    });
   }
 
   @override
@@ -58,6 +57,7 @@ class AuthController extends GetxController {
     if (user == null) {
       Get.offAllNamed('/login');
     } else {
+      member.bindStream(streamMember());
       Get.offAllNamed('/home');
     }
   }
