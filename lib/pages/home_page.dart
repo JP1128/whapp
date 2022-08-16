@@ -57,10 +57,10 @@ class _HomePageState extends State<HomePage> {
           )),
       body: Obx(
         () => [
-          const EventPage(),
-          const HistoryPage(),
-          if (_ac.isBoard()) const SearchPage(),
-          const ProfilePage(),
+          EventPage(),
+          HistoryPage(),
+          if (_ac.isBoard()) SearchPage(),
+          ProfilePage(),
         ][index.value],
       ),
     );
