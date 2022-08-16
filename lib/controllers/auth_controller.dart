@@ -71,7 +71,7 @@ class AuthController extends GetxController {
 
     return _db //
         .collection("members")
-        .doc(user.uid)
+        .doc(user.uid.toString())
         .snapshots()
         .map((data) => Member(
               uid: user.uid,
