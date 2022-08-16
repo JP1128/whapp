@@ -114,7 +114,12 @@ class _EventDetailPageState extends State<EventDetailPage> {
                     ],
                   ),
                   const SizedBox(height: 30),
-                  Text("Description", style: Get.textTheme.titleMedium),
+                  Text(
+                    "Description",
+                    style: Get.textTheme.titleMedium!.copyWith(fontSize: 14),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(_event.description ?? "No description", style: Get.textTheme.bodySmall),
                 ],
               ),
             ),
