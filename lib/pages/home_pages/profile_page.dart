@@ -5,7 +5,6 @@ import 'package:whapp/constants/theme.dart';
 import 'package:whapp/controllers/auth_controller.dart';
 import 'package:whapp/helpers/helper.dart';
 import 'package:whapp/helpers/pair.dart';
-import 'package:whapp/models/member.dart';
 import 'package:whapp/widgets/information_block.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -32,14 +31,12 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: Obx(() {
         if (_ac.member.value == null) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }
 
         var member = _ac.member.value!;
-
-        showSuccess("Success", "Loaded");
 
         return ShaderMask(
           shaderCallback: (rect) => const LinearGradient(
@@ -55,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Center(
+                  const Center(
                     child: CircleAvatar(
                       // foregroundImage: NetworkImage(member.photoURL ?? "http://www.gravatar.com/avatar"),
                       backgroundColor: primaryColor,
@@ -63,68 +60,68 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Text(
-                    member.fullName,
-                    style: Get.textTheme.titleLarge,
-                  ),
-                  Text(
-                    "${getRoleName(member.role).capitalize}",
-                    style: Get.textTheme.titleSmall,
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              member.points == 0 ? "-" : member.points.toString(),
-                              style: Get.textTheme.titleMedium,
-                            ),
-                            Text(
-                              "Points",
-                              style: Get.textTheme.titleSmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 100,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              member.minutes == 0 ? "-" : member.minutes.toString(),
-                              style: Get.textTheme.titleMedium,
-                            ),
-                            Text(
-                              "Minutes",
-                              style: Get.textTheme.titleSmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        width: 100,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              member.collection == 0 ? "-" : "\$${member.collection.toString()}",
-                              style: Get.textTheme.titleMedium,
-                            ),
-                            Text(
-                              "Collection",
-                              style: Get.textTheme.titleSmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  // Text(
+                  //   member.fullName,
+                  //   style: Get.textTheme.titleLarge,
+                  // ),
+                  // Text(
+                  //   "${getRoleName(member.role).capitalize}",
+                  //   style: Get.textTheme.titleSmall,
+                  // ),
+                  // const SizedBox(height: 20),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //   children: [
+                  //     SizedBox(
+                  //       width: 100,
+                  //       child: Column(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         children: [
+                  //           Text(
+                  //             member.points == 0 ? "-" : member.points.toString(),
+                  //             style: Get.textTheme.titleMedium,
+                  //           ),
+                  //           Text(
+                  //             "Points",
+                  //             style: Get.textTheme.titleSmall,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     SizedBox(
+                  //       width: 100,
+                  //       child: Column(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         children: [
+                  //           Text(
+                  //             member.minutes == 0 ? "-" : member.minutes.toString(),
+                  //             style: Get.textTheme.titleMedium,
+                  //           ),
+                  //           Text(
+                  //             "Minutes",
+                  //             style: Get.textTheme.titleSmall,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     SizedBox(
+                  //       width: 100,
+                  //       child: Column(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         children: [
+                  //           Text(
+                  //             member.collection == 0 ? "-" : "\$${member.collection.toString()}",
+                  //             style: Get.textTheme.titleMedium,
+                  //           ),
+                  //           Text(
+                  //             "Collection",
+                  //             style: Get.textTheme.titleSmall,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   const SizedBox(height: 30),
                   InformationBlock(
                     title: "Contact Information",
