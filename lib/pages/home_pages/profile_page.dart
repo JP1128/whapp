@@ -19,26 +19,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Profile"),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.edit_outlined),
-          ),
-        ],
-      ),
-      body: Obx(() {
-        if (_ac.member.value == null) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        var member = _ac.member.value!;
-
-        return ShaderMask(
+    return Obx(
+      () => Scaffold(
+        appBar: AppBar(
+          title: const Text("Profile"),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.edit_outlined),
+            ),
+          ],
+        ),
+        body: ShaderMask(
           shaderCallback: (rect) => const LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -126,20 +118,20 @@ class _ProfilePageState extends State<ProfilePage> {
                   InformationBlock(
                     title: "Contact Information",
                     entries: [
-                      Pair("Email address", member.emailAddress),
-                      Pair("Cell phone", parsePhoneNumber(member.phoneNumber)),
-                      Pair("Address", member.streetAddress),
+                      Pair("Email address", _ac.member.value!.emailAddress),
+                      Pair("Cell phone", parsePhoneNumber(_ac.member.value!.phoneNumber)),
+                      Pair("Address", _ac.member.value!.streetAddress),
                     ],
                   ),
                   const SizedBox(height: 30),
                   InformationBlock(
                     title: "Student Information",
                     entries: [
-                      Pair("Student ID", member.studentId),
-                      Pair("Full name", member.fullName),
-                      Pair("Homeroom", member.homeroom),
-                      Pair("Grade level", member.gradeLevel.toString()),
-                      Pair("T-Shirt size", member.tShirtSize.toUpperCase()),
+                      Pair("Student ID", _ac.member.value!.studentId),
+                      Pair("Full name", _ac.member.value!.fullName),
+                      Pair("Homeroom", _ac.member.value!.homeroom),
+                      Pair("Grade level", _ac.member.value!.gradeLevel.toString()),
+                      Pair("T-Shirt size", _ac.member.value!.tShirtSize.toUpperCase()),
                     ],
                   ),
                   const SizedBox(height: 50),
@@ -163,8 +155,8 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-        );
-      }),
+        ),
+      ),
     );
   }
 }
