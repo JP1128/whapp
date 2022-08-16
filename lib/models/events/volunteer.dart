@@ -3,6 +3,7 @@ import 'package:whapp/models/member.dart';
 
 class VolunteerEvent extends Event {
   VolunteerEvent({
+    required super.id,
     required super.boardOnly,
     required super.title,
     required super.description,

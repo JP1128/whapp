@@ -2,6 +2,7 @@ import 'package:whapp/models/events/event.dart';
 
 class AttendanceEvent extends Event {
   AttendanceEvent({
+    required super.id,
     required super.boardOnly,
     required super.title,
     required super.description,

@@ -5,6 +5,7 @@ enum EventType {
 
 class Event {
   Event({
+    required this.id,
     required this.boardOnly,
     required this.title,
     required this.description,
@@ -13,6 +14,7 @@ class Event {
     required this.end,
   });
 
+  String id;
   bool boardOnly;
 
   String title;

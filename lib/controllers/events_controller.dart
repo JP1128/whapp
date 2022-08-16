@@ -84,6 +84,14 @@ class EventsController extends GetxController {
     });
   }
 
+  Future<void> deleteEvent(Event event) async {
+    if (event is AttendanceEvent) {
+      await _db.collection("attendanceEvents").doc(event.id).delete();
+    } else if (event is VolunteerEvent) {
+      await _db.collection("volunteerEvents").doc(event.id).delete();
+    }
+  }
+
   Stream<List<VolunteerEvent>> getVolunteerEvents() {
     return _db //
         .collection("volunteerEvents")
@@ -98,6 +106,7 @@ class EventsController extends GetxController {
               var data = doc.data();
 
               var event = VolunteerEvent(
+                id: doc.id,
                 boardOnly: doc['boardOnly'],
                 title: doc['title'],
                 description: doc['description'],
@@ -129,6 +138,7 @@ class EventsController extends GetxController {
               var data = doc.data();
 
               var event = AttendanceEvent(
+                id: doc.id,
                 boardOnly: doc['boardOnly'],
                 title: doc['title'],
                 description: doc['description'],

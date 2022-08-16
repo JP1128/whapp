@@ -8,6 +8,9 @@ import 'package:whapp/models/member.dart';
 class AuthController extends GetxController {
   static final AuthController instance = Get.find();
 
+  final _auth = FirebaseAuth.instance;
+  final _db = FirebaseFirestore.instance;
+
   // Login & Registration
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -25,11 +28,9 @@ class AuthController extends GetxController {
   String? streetAddress;
   String? tShirtSize;
 
-  final _auth = FirebaseAuth.instance;
-  final _db = FirebaseFirestore.instance;
+  Rx<Member?> member = Rx<Member?>(null);
 
   late Rx<User?> firebaseUser;
-  late Rx<Member?> member;
 
   @override
   void onReady() async {
@@ -38,8 +39,11 @@ class AuthController extends GetxController {
     firebaseUser.bindStream(_auth.authStateChanges());
     ever(firebaseUser, _handleAuthStateChanges);
 
-    member = Rx<Member?>(null);
-    member.bindStream(streamMember);
+    _auth.userChanges().listen((user) async {
+      if (user != null) {
+        member.value = await getMember;
+      }
+    });
   }
 
   @override
@@ -47,6 +51,7 @@ class AuthController extends GetxController {
     super.onClose();
     emailController.dispose();
     passwordController.dispose();
+    confirmPasswordController.dispose();
   }
 
   _handleAuthStateChanges(User? user) async {
@@ -59,77 +64,75 @@ class AuthController extends GetxController {
 
   Future<User?> get getUser async => _auth.currentUser;
 
-  Stream<Member?> get streamMember {
+  Stream<Member?> streamMember() {
     var user = firebaseUser.value;
 
-    if (user != null) {
-      return _db //
-          .collection("members")
-          .doc(firebaseUser.value!.uid)
-          .snapshots()
-          .map((data) => Member(
-                uid: user.uid,
-                emailAddress: user.email!, // signed in
-                photoURL: user.photoURL,
-                role: data['role'],
+    if (user == null) return const Stream.empty();
 
-                points: data['points'],
-                minutes: data['minutes'],
-                collection: data['collection'].toDouble(),
+    return _db //
+        .collection("members")
+        .doc(user.uid)
+        .snapshots()
+        .map((data) => Member(
+              uid: user.uid,
+              emailAddress: user.email!, // signed in
+              photoURL: user.photoURL,
+              role: data['role'],
 
-                fullName: data['fullName'],
-                studentId: data['studentId'],
-                homeroom: data['homeroom'],
-                gradeLevel: data['gradeLevel'],
+              points: data['points'],
+              minutes: data['minutes'],
+              collection: data['collection'].toDouble(),
 
-                phoneNumber: data['phoneNumber'],
-                streetAddress: data['streetAddress'],
+              fullName: data['fullName'],
+              studentId: data['studentId'],
+              homeroom: data['homeroom'],
+              gradeLevel: data['gradeLevel'],
 
-                tShirtSize: data['tShirtSize'],
-                tShirtReceived: data['tShirtReceived'],
-                duesPaid: data['duesPaid'],
-              ));
-    }
+              phoneNumber: data['phoneNumber'],
+              streetAddress: data['streetAddress'],
 
-    return Stream.empty();
+              tShirtSize: data['tShirtSize'],
+              tShirtReceived: data['tShirtReceived'],
+              duesPaid: data['duesPaid'],
+            ));
   }
 
   Future<Member?> get getMember async {
     var user = firebaseUser.value;
 
-    if (user != null) {
-      return await _db //
-          .collection('members')
-          .doc(user.uid.toString())
-          .get()
-          .then((data) => Member(
-                uid: user.uid,
-                emailAddress: user.email!, // signed in
-                photoURL: user.photoURL,
-                role: data['role'],
+    if (user == null) return null;
 
-                points: data['points'],
-                minutes: data['minutes'],
-                collection: data['collection'].toDouble(),
+    return await _db //
+        .collection('members')
+        .doc(user.uid.toString())
+        .get()
+        .then((data) => Member(
+              uid: user.uid,
+              emailAddress: user.email!, // signed in
+              photoURL: user.photoURL,
+              role: data['role'],
 
-                fullName: data['fullName'],
-                studentId: data['studentId'],
-                homeroom: data['homeroom'],
-                gradeLevel: data['gradeLevel'],
+              points: data['points'],
+              minutes: data['minutes'],
+              collection: data['collection'].toDouble(),
 
-                phoneNumber: data['phoneNumber'],
-                streetAddress: data['streetAddress'],
+              fullName: data['fullName'],
+              studentId: data['studentId'],
+              homeroom: data['homeroom'],
+              gradeLevel: data['gradeLevel'],
 
-                tShirtSize: data['tShirtSize'],
-                tShirtReceived: data['tShirtReceived'],
-                duesPaid: data['duesPaid'],
-              ));
-    }
+              phoneNumber: data['phoneNumber'],
+              streetAddress: data['streetAddress'],
 
-    return Future.error(
-      Exception('Could not retrieve member instance associated with the current user'),
-    );
+              tShirtSize: data['tShirtSize'],
+              tShirtReceived: data['tShirtReceived'],
+              duesPaid: data['duesPaid'],
+            ));
   }
+
+  bool isBoard() => member.value != null ? member.value!.role <= 2 : false;
+
+  bool isAdmin() => member.value != null ? member.value!.role == 1 : false;
 
   Future<void> createMember(Member member) async {
     var user = firebaseUser.value;
@@ -213,6 +216,7 @@ class AuthController extends GetxController {
   Future<void> logout() async {
     emailController.clear();
     passwordController.clear();
+    confirmPasswordController.clear();
     _auth.signOut();
     update();
   }
