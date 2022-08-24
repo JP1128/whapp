@@ -174,26 +174,28 @@ class _EventDetailPageState extends State<EventDetailPage> {
                   indent: 50,
                   endIndent: 50,
                 ),
-                Padding(
-                  padding: hPad,
-                  child: Text(
-                    "SignUp List",
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 14),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                if (event.signUps!.isEmpty)
+                if (isVolunteer) ...[
                   Padding(
                     padding: hPad,
                     child: Text(
-                      "No one has signed up yet :(",
-                      style: Theme.of(context).textTheme.bodySmall,
+                      "SignUp List",
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 14),
                     ),
                   ),
+                  const SizedBox(height: 10),
+                  if (event.signUps!.isEmpty)
+                    Padding(
+                      padding: hPad,
+                      child: Text(
+                        "No one has signed up yet :(",
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                ]
               ],
             ),
           ),
-          if (event.signUps!.isNotEmpty)
+          if (isVolunteer && event.signUps!.isNotEmpty)
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 childCount: event.signUps!.length,
