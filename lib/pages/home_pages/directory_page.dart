@@ -84,7 +84,7 @@ class _DirectoryPageState extends State<DirectoryPage> {
                               );
                             }
 
-                            return Text("Could not find member");
+                            return const Center(child: CircularProgressIndicator());
                           },
                         );
                       }),
