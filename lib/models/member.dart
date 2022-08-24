@@ -36,7 +36,7 @@ class Member {
   String fullName;
   String studentId;
   String homeroom;
-  int gradeLevel; // 9, 10, 11, 12
+  String gradeLevel; // freshman, sophomore, junior, senior, supervisor
 
   // Contact information
   String phoneNumber;
@@ -46,4 +46,9 @@ class Member {
   String tShirtSize;
   bool? tShirtReceived;
   bool? duesPaid;
+
+  @override
+  String toString() {
+    return fullName;
+  }
 }

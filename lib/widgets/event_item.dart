@@ -1,35 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:whapp/constants/constants.dart';
 import 'package:whapp/constants/theme.dart';
 import 'package:whapp/helpers/helper.dart';
-import 'package:whapp/models/events/attendance.dart';
-import 'package:whapp/models/events/event.dart';
-import 'package:whapp/models/events/volunteer.dart';
+import 'package:whapp/models/event.dart';
 
-class EventItem extends StatefulWidget {
-  const EventItem({
-    Key? key,
-    required this.event,
-  }) : super(key: key);
+class EventItem extends StatelessWidget {
+  const EventItem(this.event, {Key? key}) : super(key: key);
 
   final Event event;
 
   @override
-  State<EventItem> createState() => _EventItemState();
-}
-
-class _EventItemState extends State<EventItem> {
-  late Event _event;
-
-  @override
-  void initState() {
-    super.initState();
-    _event = widget.event;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    var avatar = event.eventType == EventType.attendance //
+        ? attendanceAvatar
+        : (event.eventType == EventType.volunteer //
+            ? volunteerAvatar
+            : CircleAvatar());
+
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
       decoration: BoxDecoration(
@@ -38,7 +25,7 @@ class _EventItemState extends State<EventItem> {
         boxShadow: [
           BoxShadow(
             color: palette[7].withAlpha(20),
-            offset: Offset(0, 0),
+            offset: Offset(0, 15),
             blurRadius: 30,
           ),
         ],
@@ -49,39 +36,35 @@ class _EventItemState extends State<EventItem> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _event is VolunteerEvent //
-                  ? volunteerAvatar
-                  : (_event is AttendanceEvent //
-                      ? attendanceAvatar
-                      : CircleAvatar()),
+              avatar,
               const SizedBox(width: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    formatDate(_event.start, "MMMM d, E"),
-                    style: Get.textTheme.bodySmall!.copyWith(color: palette[6]),
+                    formatDate(event.start, "MMMM d, E"),
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(color: palette[6]),
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    _event.title,
+                    event.title,
                     textAlign: TextAlign.left,
-                    style: Get.textTheme.titleSmall!.copyWith(fontSize: 15),
+                    style: Theme.of(context).textTheme.titleSmall!.copyWith(fontSize: 15),
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Icon(
                         Icons.access_time_outlined,
-                        color: _event.end.isBefore(DateTime.now()) ? errorColor : palette[6],
+                        color: event.end.isBefore(DateTime.now()) ? errorColor : palette[6],
                         size: 15,
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        "${formatDate(_event.start, 'jm')} - ${formatDate(_event.end, 'jm')}",
-                        style: Get.textTheme.bodySmall!.copyWith(
-                          color: _event.end.isBefore(DateTime.now()) ? errorColor : palette[6],
-                        ),
+                        "${formatDate(event.start, 'jm')} - ${formatDate(event.end, 'jm')}",
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                              color: event.end.isBefore(DateTime.now()) ? errorColor : palette[6],
+                            ),
                       )
                     ],
                   ),

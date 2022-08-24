@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const Color primaryColor = Color(0xFF48CAE4);
+const Color primaryColor = Color(0xFF212529);
 const Color errorColor = Color(0xFFBD4747);
 const Color successColor = Color(0xFF54CB5E);
 
@@ -42,7 +42,7 @@ TextStyle poppins(double? fontSize, FontWeight? fontWeight, {Color? color}) => G
 
 AppBarTheme appBarTheme = AppBarTheme(
   elevation: 0,
-  color: Colors.transparent,
+  backgroundColor: palette.first,
   titleTextStyle: GoogleFonts.poppins(
     color: palette[9],
     fontWeight: FontWeight.w600,
@@ -68,17 +68,23 @@ InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
 
 ElevatedButtonThemeData elevatedButtonTheme = ElevatedButtonThemeData(
   style: ButtonStyle(
+    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30),
+    )),
     textStyle: MaterialStateProperty.all(poppins(15, bold)),
-    minimumSize: MaterialStateProperty.all(const Size.fromHeight(50.0)),
+    minimumSize: MaterialStateProperty.all(const Size.fromHeight(50)),
     backgroundColor: MaterialStateProperty.all(primaryColor),
   ),
 );
 
 OutlinedButtonThemeData outlinedButtonTheme = OutlinedButtonThemeData(
   style: ButtonStyle(
+    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30),
+    )),
     foregroundColor: MaterialStateProperty.all(primaryColor),
     textStyle: MaterialStateProperty.all(poppins(15, semiBold)),
-    minimumSize: MaterialStateProperty.all(const Size.fromHeight(50.0)),
+    minimumSize: MaterialStateProperty.all(const Size.fromHeight(50)),
   ),
 );
 
@@ -119,4 +125,7 @@ final ThemeData lightTheme = ThemeData(
   bottomNavigationBarTheme: navigationBarThemeData,
   buttonTheme: buttonTheme,
   chipTheme: chipTheme,
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    backgroundColor: primaryColor,
+  ),
 );

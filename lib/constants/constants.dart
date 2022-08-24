@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:whapp/constants/theme.dart';
 
+const horizontalPaddingValue = 30.0;
+const verticalPaddingValue = 50.0;
+
+const hPad = EdgeInsets.symmetric(horizontal: horizontalPaddingValue);
+const vPad = EdgeInsets.symmetric(vertical: verticalPaddingValue);
 const defaultPadding = EdgeInsets.symmetric(
-  vertical: 50.0,
-  horizontal: 30.0,
+  vertical: verticalPaddingValue,
+  horizontal: horizontalPaddingValue,
 );
 
 const CircleAvatar volunteerAvatar = CircleAvatar(

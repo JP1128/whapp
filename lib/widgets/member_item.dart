@@ -1,54 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:whapp/constants/constants.dart';
 import 'package:whapp/constants/theme.dart';
 import 'package:whapp/helpers/helper.dart';
-import 'package:whapp/models/events/attendance.dart';
-import 'package:whapp/models/events/event.dart';
-import 'package:whapp/models/events/volunteer.dart';
 
-class MemberItem extends StatefulWidget {
-  MemberItem({
+class MemberItem extends StatelessWidget {
+  const MemberItem(
+    this.fullName,
+    this.homeroom,
+    this.gradeLevel,
+    this.phoneNumber,
+    this.emailAddress, {
     Key? key,
-    required this.fullName,
-    required this.homeroom,
-    required this.gradeLevel,
-    required this.phoneNumber,
-    required this.emailAddress,
+    this.icon = Icons.arrow_forward_ios_outlined,
   }) : super(key: key);
 
-  String fullName;
-  String homeroom;
-  int gradeLevel;
+  final String fullName;
+  final String homeroom;
+  final String gradeLevel;
+  final String phoneNumber;
+  final String emailAddress;
 
-  String phoneNumber;
-  String emailAddress;
-
-  @override
-  State<MemberItem> createState() => _MemberItemState();
-}
-
-class _MemberItemState extends State<MemberItem> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: palette[7].withAlpha(20),
-            offset: Offset(0, 0),
-            blurRadius: 30,
-          ),
-        ],
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -56,18 +32,22 @@ class _MemberItemState extends State<MemberItem> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "${widget.fullName} (${widget.gradeLevel})",
-                style: Get.textTheme.titleSmall!.copyWith(fontSize: 15),
+                "$fullName ($gradeLevel)",
+                style: Theme.of(context).textTheme.titleSmall,
               ),
-              const SizedBox(height: 5),
+              Text(
+                "@ $homeroom",
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 10),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(Icons.email_outlined, size: 15),
                   const SizedBox(width: 5),
                   Text(
-                    widget.emailAddress,
-                    style: Get.textTheme.bodySmall!.copyWith(color: palette[6]),
+                    emailAddress,
+                    style: Theme.of(context).textTheme.bodySmall,
                   )
                 ],
               ),
@@ -78,22 +58,14 @@ class _MemberItemState extends State<MemberItem> {
                   Icon(Icons.phone_outlined, size: 15),
                   const SizedBox(width: 5),
                   Text(
-                    parsePhoneNumber(widget.phoneNumber),
-                    style: Get.textTheme.bodySmall!.copyWith(color: palette[6]),
+                    phoneNumber,
+                    style: Theme.of(context).textTheme.bodySmall,
                   )
                 ],
               ),
-              const SizedBox(height: 5),
-              Text(
-                "Hr: ${widget.homeroom}",
-                style: Get.textTheme.bodySmall!.copyWith(color: palette[6]),
-              ),
             ],
           ),
-          Icon(
-            Icons.arrow_forward_ios_rounded,
-            color: palette[6],
-          ),
+          Icon(icon, color: palette[6]),
         ],
       ),
     );

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:whapp/constants/theme.dart';
-import 'package:whapp/controllers/auth_controller.dart';
-import 'package:whapp/controllers/events_controller.dart';
-import 'package:whapp/models/events/event.dart';
-import 'package:whapp/pages/home_pages/event_detail_page.dart';
+import 'package:provider/provider.dart';
+import 'package:whapp/constants/constants.dart';
+import 'package:whapp/models/event.dart';
+import 'package:whapp/models/member.dart';
+import 'package:whapp/pages/event_pages/event_creation_page.dart';
+import 'package:whapp/pages/event_pages/event_detail_page.dart';
+import 'package:whapp/services/firebase_service.dart';
 import 'package:whapp/widgets/event_item.dart';
 
 class EventPage extends StatefulWidget {
@@ -15,76 +16,77 @@ class EventPage extends StatefulWidget {
 }
 
 class _EventPageState extends State<EventPage> {
-  final AuthController _ac = Get.find();
-  final EventsController _ec = Get.find();
-
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => Scaffold(
-        appBar: AppBar(
-          title: const Text("Explore"),
+    var currentMember = Provider.of<Member?>(context);
+    var events = Provider.of<List<Event>?>(context);
+
+    if (events == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    var modifiable = events.toList();
+    modifiable.sort((e1, e2) => e1.start.isBefore(e2.start) ? 0 : 1);
+
+    var isBoard = currentMember!.role <= 2;
+
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        SliverAppBar(
+          title: Text("Home"),
+          leading: IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.bookmark_outline),
+          ),
           actions: [
-            if (_ac.isBoard())
+            if (isBoard)
               IconButton(
-                onPressed: () => Get.toNamed("/create_event"),
-                icon: const Icon(Icons.add_outlined),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: ((context) {
+                        return EventCreationPage();
+                      }),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.add),
               ),
           ],
         ),
-        body: StreamBuilder(
-          stream: _ec.getEvents(),
-          builder: (
-            context,
-            AsyncSnapshot<List<List<Event>>> snapshots,
-          ) {
-            if (!snapshots.hasData) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-
-            List<List<Event>> lsts = snapshots.data!;
-
-            var stream = [
-              ...lsts[0],
-              ...lsts[1],
-            ];
-
-            stream.sort((a, b) => a.start.isBefore(b.start) ? 0 : 1);
-
-            if (!_ac.isBoard()) {
-              stream.retainWhere((element) => !element.boardOnly);
-            }
-
-            if (stream.isEmpty) {
-              return Padding(
-                padding: const EdgeInsets.all(50),
-                child: Center(
-                  child: Text(
-                    "There is no more upcoming event :(",
-                    textAlign: TextAlign.center,
-                    style: Get.textTheme.titleMedium!.copyWith(color: palette[5]),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            childCount: modifiable.length,
+            (context, index) {
+              var data = modifiable[index];
+              return Column(
+                children: [
+                  Padding(
+                    padding: hPad,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context, rootNavigator: true).push(
+                          MaterialPageRoute(builder: (context) {
+                            return StreamProvider.value(
+                              value: FirebaseService.instance.memberChanges(),
+                              initialData: null,
+                              lazy: true,
+                              child: EventDetailPage(data),
+                            );
+                          }),
+                        );
+                      },
+                      child: EventItem(data),
+                    ),
                   ),
-                ),
+                  if (index < modifiable.length) const SizedBox(height: 10),
+                ],
               );
-            }
-
-            return ListView.separated(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-              itemCount: stream.length,
-              itemBuilder: ((context, index) {
-                var event = stream[index];
-                return GestureDetector(
-                  child: EventItem(event: event),
-                  onTap: () => Get.to(() => EventDetailPage(event: event)),
-                );
-              }),
-              separatorBuilder: (context, index) => const SizedBox(height: 20),
-            );
-          },
-        ),
-      ),
+            },
+          ),
+        )
+      ],
     );
   }
 }

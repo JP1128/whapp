@@ -1,67 +1,59 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:whapp/constants/theme.dart';
-import 'package:whapp/controllers/events_controller.dart';
-import 'package:whapp/controllers/storage_controller.dart';
-import 'package:whapp/controllers/store_controller.dart';
 import 'package:whapp/firebase_options.dart';
-import 'package:whapp/pages/forgot_password_page.dart';
+import 'package:whapp/models/member.dart';
 import 'package:whapp/pages/home_page.dart';
-import 'package:whapp/pages/home_pages/event_creation_page.dart';
 import 'package:whapp/pages/login_page.dart';
-import 'package:whapp/pages/home_pages/profile_page.dart';
-import 'package:whapp/pages/signup_page.dart';
-import 'package:whapp/pages/splash_page.dart';
-import 'controllers/auth_controller.dart';
-import 'firebase_options.dart';
+import 'package:whapp/services/firebase_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  ).then((value) {
-    Get.put(AuthController());
-    Get.put(StorageController());
-    Get.put(EventsController());
-    Get.put(StoreController());
-  });
-
-  // Prevent landscape mode
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  runApp(const MyApp());
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  runApp(const WaltonHabitatApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class WaltonHabitatApp extends StatefulWidget {
+  const WaltonHabitatApp({Key? key}) : super(key: key);
+
+  @override
+  State<WaltonHabitatApp> createState() => _WaltonHabitatAppState();
+}
+
+class _WaltonHabitatAppState extends State<WaltonHabitatApp> {
+  final _firebase = FirebaseService.instance;
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: lightTheme,
-      defaultTransition: Transition.native,
-      initialRoute: "/",
-      getPages: [
-        GetPage(name: '/', page: () => const SplashPage()),
-        GetPage(
-          name: '/login',
-          page: () => const LoginPage(),
-          transition: Transition.fade,
+    return StreamProvider<User?>.value(
+      value: _firebase.userChanges(),
+      initialData: _firebase.currentUser,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: lightTheme,
+        home: Builder(
+          builder: (context) {
+            var user = context.watch<User?>();
+
+            if (user != null) {
+              return StreamProvider<Member?>.value(
+                value: _firebase.memberChangesById(user.uid),
+                initialData: null,
+                lazy: true,
+                child: const HomePage(),
+              );
+            }
+
+            return const LoginPage();
+          },
         ),
-        GetPage(
-          name: '/signup',
-          page: () => const SignupPage(),
-          transition: Transition.downToUp,
-        ),
-        GetPage(name: '/create_event', page: () => EventCreationPage()),
-        GetPage(name: '/forgot', page: () => const ForgotPasswordPage()),
-        GetPage(name: '/home', page: () => const HomePage()),
-        GetPage(name: '/profile', page: () => const ProfilePage()),
-      ],
+      ),
     );
   }
 }
