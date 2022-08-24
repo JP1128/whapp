@@ -46,7 +46,12 @@ class _WaltonHabitatAppState extends State<WaltonHabitatApp> {
                 value: _firebase.memberChangesById(user.uid),
                 initialData: null,
                 lazy: true,
-                child: const HomePage(),
+                child: GestureDetector(
+                  child: const HomePage(),
+                  onTap: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                ),
               );
             }
 
