@@ -444,11 +444,11 @@ class _SignUpPageState extends State<SignUpPage> {
                                                 tShirtReceived: false,
                                                 duesPaid: false,
                                               ));
-                                              fs.login(context, _email!, _password!);
                                             });
                                           }
                                         },
                                       );
+                                      fs.login(context, _email!, _password!);
                                     }
                                   },
                                   child: const Text("Create account"),
