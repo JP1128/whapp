@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 import 'package:whapp/constants/constants.dart';
-import 'package:whapp/constants/theme.dart';
 import 'package:whapp/helpers/helper.dart';
-import 'package:whapp/models/event.dart';
 import 'package:whapp/models/history.dart';
 import 'package:whapp/widgets/history_item.dart';
 
