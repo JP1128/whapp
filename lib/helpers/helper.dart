@@ -72,7 +72,7 @@ Widget showAvatar(String svg, double size) {
     svg,
     width: size,
     height: size,
-    allowDrawingOutsideViewBox: true,
+    fit: BoxFit.fill,
   );
 }
 
