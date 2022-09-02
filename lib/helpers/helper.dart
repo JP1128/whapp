@@ -1,12 +1,7 @@
-import 'dart:ffi';
-import 'dart:typed_data';
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:whapp/constants/theme.dart';
 
 int minuteFromTimeOfDay(TimeOfDay start, TimeOfDay end) {
   int endMinutes = end.hour * 60 + end.minute;
