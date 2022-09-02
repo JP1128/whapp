@@ -366,14 +366,49 @@ class _ProfilePageState extends State<ProfilePage> {
                       minimumSize: const Size.fromHeight(50),
                       primary: primaryColor,
                     ),
-                    onPressed: () => FirebaseService.instance.updateMemberFields(
-                      profileOwner.uid,
-                      {"tShirtReceived": !tShirtReceived},
-                    ),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (!tShirtReceived)
+                                    Text(
+                                      "Continue with marking this member as having received the T-Shirt?",
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                  if (tShirtReceived)
+                                    Text(
+                                      "Continue with unmarking this member?",
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text("No"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    FirebaseService.instance.updateMemberFields(
+                                      profileOwner.uid,
+                                      {"tShirtReceived": !tShirtReceived},
+                                    );
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Yes"),
+                                ),
+                              ],
+                            );
+                          });
+                    },
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Icon(Icons.check),
                         SizedBox(width: 10),
                         Text("T-Shirt Received"),
@@ -389,10 +424,45 @@ class _ProfilePageState extends State<ProfilePage> {
                       minimumSize: const Size.fromHeight(50),
                       primary: primaryColor,
                     ),
-                    onPressed: () => FirebaseService.instance.updateMemberFields(
-                      profileOwner.uid,
-                      {"duesPaid": !duesPaid},
-                    ),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (!duesPaid)
+                                    Text(
+                                      "Continue with marking this member as having paid the dues?",
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                  if (duesPaid)
+                                    Text(
+                                      "Continue with unmarking this member?",
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text("No"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    FirebaseService.instance.updateMemberFields(
+                                      profileOwner.uid,
+                                      {"duesPaid": !duesPaid},
+                                    );
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text("Yes"),
+                                ),
+                              ],
+                            );
+                          });
+                    },
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
