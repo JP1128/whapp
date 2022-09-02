@@ -34,7 +34,7 @@ const bold = FontWeight.w700;
 const extraBold = FontWeight.w800;
 const black = FontWeight.w900;
 
-TextStyle poppins(double? fontSize, FontWeight? fontWeight, {Color? color}) => GoogleFonts.poppins(
+TextStyle roboto(double? fontSize, FontWeight? fontWeight, {Color? color}) => GoogleFonts.roboto(
       fontSize: fontSize ?? 12.0,
       fontWeight: fontWeight ?? FontWeight.w400,
       color: color ?? palette.last,
@@ -43,7 +43,7 @@ TextStyle poppins(double? fontSize, FontWeight? fontWeight, {Color? color}) => G
 AppBarTheme appBarTheme = AppBarTheme(
   elevation: 0,
   backgroundColor: palette.first,
-  titleTextStyle: GoogleFonts.poppins(
+  titleTextStyle: GoogleFonts.roboto(
     color: palette[9],
     fontWeight: FontWeight.w600,
   ),
@@ -62,7 +62,7 @@ InputDecorationTheme inputDecorationTheme = InputDecorationTheme(
   iconColor: palette[6],
   helperMaxLines: 1,
   errorMaxLines: 1,
-  labelStyle: poppins(12, regular),
+  labelStyle: roboto(12, regular),
   focusColor: primaryColor,
 );
 
@@ -71,7 +71,7 @@ ElevatedButtonThemeData elevatedButtonTheme = ElevatedButtonThemeData(
     shape: MaterialStateProperty.all(RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(30),
     )),
-    textStyle: MaterialStateProperty.all(poppins(15, bold)),
+    textStyle: MaterialStateProperty.all(roboto(15, bold)),
     minimumSize: MaterialStateProperty.all(const Size.fromHeight(50)),
     backgroundColor: MaterialStateProperty.all(primaryColor),
   ),
@@ -83,7 +83,7 @@ OutlinedButtonThemeData outlinedButtonTheme = OutlinedButtonThemeData(
       borderRadius: BorderRadius.circular(30),
     )),
     foregroundColor: MaterialStateProperty.all(primaryColor),
-    textStyle: MaterialStateProperty.all(poppins(15, semiBold)),
+    textStyle: MaterialStateProperty.all(roboto(15, semiBold)),
     minimumSize: MaterialStateProperty.all(const Size.fromHeight(50)),
   ),
 );
@@ -93,13 +93,13 @@ BottomNavigationBarThemeData navigationBarThemeData = BottomNavigationBarThemeDa
   unselectedItemColor: primaryColor,
   type: BottomNavigationBarType.shifting,
   showUnselectedLabels: false,
-  selectedLabelStyle: poppins(10, regular),
+  selectedLabelStyle: roboto(10, regular),
 );
 
 ButtonThemeData buttonTheme = const ButtonThemeData();
 
 ChipThemeData chipTheme = ChipThemeData(
-  labelStyle: poppins(12, medium),
+  labelStyle: roboto(12, medium),
 );
 
 final ThemeData lightTheme = ThemeData(
@@ -107,16 +107,16 @@ final ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
   scaffoldBackgroundColor: palette[0],
   primaryColor: primaryColor,
-  textTheme: GoogleFonts.poppinsTextTheme(
+  textTheme: GoogleFonts.robotoTextTheme(
     TextTheme(
-      displayLarge: poppins(35, bold),
-      displayMedium: poppins(25, semiBold),
-      titleLarge: poppins(25, semiBold),
-      titleMedium: poppins(20, semiBold),
-      titleSmall: poppins(12, medium),
-      bodyLarge: poppins(17, regular),
-      bodyMedium: poppins(14, regular),
-      bodySmall: poppins(12, regular),
+      displayLarge: roboto(35, bold),
+      displayMedium: roboto(25, semiBold),
+      titleLarge: roboto(25, semiBold),
+      titleMedium: roboto(20, semiBold),
+      titleSmall: roboto(12, medium),
+      bodyLarge: roboto(17, regular),
+      bodyMedium: roboto(14, regular),
+      bodySmall: roboto(12, regular),
     ),
   ),
   inputDecorationTheme: inputDecorationTheme,
