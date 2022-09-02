@@ -35,7 +35,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: PageView(
         physics: NeverScrollableScrollPhysics(parent: const ClampingScrollPhysics()),
-        onPageChanged: (i) => setState(() => _index = i),
+        onPageChanged: (i) {
+          setState(() => _index = i);
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
         controller: _pageController,
         children: [
           StreamProvider<List<Event>?>.value(
