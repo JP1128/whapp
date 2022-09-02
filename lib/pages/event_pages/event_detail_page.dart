@@ -254,7 +254,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                                                   }),
                                                 );
                                               },
-                                              child: getAvatar(member.uid, 100)),
+                                              child: showAvatar(member.photoURL, 100)),
                                           const SizedBox(height: 20),
                                           Text(
                                             member.fullName,
@@ -358,7 +358,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                       },
                       child: Row(
                         children: [
-                          getAvatar(member.uid, 50),
+                          showAvatar(member.photoURL, 50),
                           const SizedBox(width: 20),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -550,6 +550,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                                     child: InkWell(
                                       child: MemberItem(
                                         data['objectID'],
+                                        data['photoURL'],
                                         data['fullName'],
                                         data['homeroom'],
                                         data['gradeLevel'],

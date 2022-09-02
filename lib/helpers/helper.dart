@@ -1,4 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -66,12 +67,23 @@ String parsePhoneNumber(String phoneNumber) {
   return "$a-$b-$c";
 }
 
-SvgPicture getAvatar(String uid, int size) {
-  return SvgPicture.network(
-    'https://source.boringavatars.com/beam/$size/$uid',
-    width: size.toDouble(),
-    height: size.toDouble(),
+Widget showAvatar(String svg, double size) {
+  return SvgPicture.string(
+    svg,
+    width: size,
+    height: size,
   );
+}
+
+Future<String> getAvatarString(String uid) async {
+  var res = await Dio().get(
+    'https://source.boringavatars.com/beam/500/$uid',
+    options: Options(
+      responseType: ResponseType.plain,
+    ),
+  );
+
+  return res.data;
 }
 
 void showError(BuildContext context, String message) {

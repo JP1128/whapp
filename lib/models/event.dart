@@ -49,6 +49,7 @@ class Event {
 class SignedUpMembers {
   SignedUpMembers({
     required this.uid,
+    required this.photoURL,
     required this.fullName,
     required this.gradeLevel,
     required this.phoneNumber,
@@ -56,6 +57,7 @@ class SignedUpMembers {
   });
 
   String uid;
+  String photoURL;
   String fullName;
   String gradeLevel;
   String phoneNumber;

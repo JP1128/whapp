@@ -64,6 +64,7 @@ class _DirectoryPageState extends State<DirectoryPage> {
                 child: InkWell(
                   child: MemberItem(
                     data['objectID'],
+                    data['photoURL'],
                     data['fullName'],
                     data['homeroom'],
                     data['gradeLevel'],

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:whapp/helpers/algolia_service.dart';
 import 'package:whapp/helpers/helper.dart';
 import 'package:whapp/models/event.dart';
 import 'package:whapp/models/history.dart';
@@ -95,6 +96,7 @@ class FirebaseService extends ChangeNotifier {
       "signUps": FieldValue.arrayUnion([
         {
           "uid": member.uid,
+          "photoURL": member.photoURL,
           "fullName": member.fullName,
           "gradeLevel": member.gradeLevel,
           "phoneNumber": member.phoneNumber,
@@ -112,6 +114,7 @@ class FirebaseService extends ChangeNotifier {
       "signUps": FieldValue.arrayRemove([
         {
           "uid": member.uid,
+          "photoURL": member.photoURL,
           "fullName": member.fullName,
           "gradeLevel": member.gradeLevel,
           "phoneNumber": member.phoneNumber,
@@ -242,6 +245,7 @@ class FirebaseService extends ChangeNotifier {
       var signUps = List<SignedUpMembers>.from(snapshot['signUps'] //
           .map((map) => SignedUpMembers(
                 uid: map['uid'],
+                photoURL: map['photoURL'],
                 fullName: map['fullName'],
                 gradeLevel: map['gradeLevel'],
                 phoneNumber: map['phoneNumber'],
