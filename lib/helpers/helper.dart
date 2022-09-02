@@ -1,8 +1,18 @@
+import 'dart:ffi';
+import 'dart:typed_data';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:whapp/constants/theme.dart';
+
+int minuteFromTimeOfDay(TimeOfDay start, TimeOfDay end) {
+  int endMinutes = end.hour * 60 + end.minute;
+  int startMinutes = start.hour * 60 + start.minute;
+  return endMinutes - startMinutes;
+}
 
 String getRoleName(int role) {
   switch (role) {
@@ -61,6 +71,14 @@ String parsePhoneNumber(String phoneNumber) {
   return "$a-$b-$c";
 }
 
+SvgPicture getAvatar(String uid, int size) {
+  return SvgPicture.network(
+    'https://source.boringavatars.com/beam/$size/$uid',
+    width: size.toDouble(),
+    height: size.toDouble(),
+  );
+}
+
 void showError(BuildContext context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
@@ -76,28 +94,26 @@ void showError(BuildContext context, String message) {
   );
 }
 
-void showSuccess(String title, String message) {
-  Get.snackbar(
-    title,
-    message,
-    borderRadius: 10,
-    isDismissible: true,
-    shouldIconPulse: true,
-    icon: Icon(Icons.check, color: palette.first),
-    backgroundColor: successColor,
-    snackPosition: SnackPosition.BOTTOM,
-    padding: const EdgeInsets.symmetric(
-      vertical: 20,
-      horizontal: 30,
+void showSuccess(BuildContext context, String title, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: AwesomeSnackbarContent(
+        title: "Oh Snap!",
+        message: message,
+        contentType: ContentType.failure,
+      ),
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      behavior: SnackBarBehavior.floating,
     ),
-    margin: const EdgeInsets.all(20),
-    titleText: Text(
-      title,
-      style: poppins(15, semiBold, color: palette.first),
-    ),
-    messageText: Text(
-      message,
-      style: poppins(13, light, color: palette[1]),
+  );
+}
+
+void showWIP(BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      duration: Duration(milliseconds: 500),
+      content: Text("Currently work in progress!"),
     ),
   );
 }

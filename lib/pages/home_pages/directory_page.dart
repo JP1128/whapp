@@ -63,6 +63,7 @@ class _DirectoryPageState extends State<DirectoryPage> {
                 padding: hPad,
                 child: InkWell(
                   child: MemberItem(
+                    data['objectID'],
                     data['fullName'],
                     data['homeroom'],
                     data['gradeLevel'],

@@ -498,6 +498,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
                                       "start": start,
                                       "end": end,
                                       "capacity": capacity,
+                                      "checkedId": [],
                                       "signUpsId": [],
                                       "signUps": [],
                                       "totalRaised": 0,

@@ -67,7 +67,7 @@ class PMC extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  collection == 0 ? "-" : collection.toString(),
+                  collection == 0 ? "-" : "\$${collection.toStringAsFixed(2)}",
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 Text(

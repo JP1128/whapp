@@ -99,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                                             )),
                                         child: Text(
                                           'Forgot Password?',
-                                          style: Theme.of(context).textTheme.titleSmall,
+                                          style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Color(0xFF35A7FF)),
                                         ),
                                       ),
                                     ),
@@ -134,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         child: Text(
                           "Create account",
-                          style: Theme.of(context).textTheme.titleSmall,
+                          style: Theme.of(context).textTheme.titleSmall!.copyWith(color: Color(0xFF35A7FF)),
                         ),
                       )
                     ],

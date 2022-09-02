@@ -1,19 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:whapp/helpers/helper.dart';
 import 'package:whapp/models/event.dart';
+import 'package:whapp/models/history.dart';
 import 'package:whapp/models/member.dart';
-import 'package:whapp/services/firebase_exceptions.dart';
 
 class FirebaseService extends ChangeNotifier {
   static final instance = FirebaseService._();
 
+  static final _storage = FirebaseStorage.instance;
   static final _auth = FirebaseAuth.instance;
   static final _db = FirebaseFirestore.instance;
 
+  static final _histories = _db.collection("histories");
   static final _members = _db.collection("members");
   static final _events = _db.collection("events");
 
@@ -63,52 +64,27 @@ class FirebaseService extends ChangeNotifier {
     return _events //
         .snapshots()
         .map((snapshot) => snapshot.docs)
-        .map(
-          (events) => events.map(
-            (event) {
-              if (event['eventType'] == "attendance") {
-                return Event(
-                  id: event.id,
-                  eventType: EventType.attendance,
-                  boardOnly: event['boardOnly'],
-                  title: event['title'],
-                  description: event['description'],
-                  location: event['location'],
-                  start: event['start'].toDate(),
-                  end: event['end'].toDate(),
-                  pointReward: event['pointReward'],
-                );
-              }
+        .map((events) => events.map(eventFromDocumentSnapshot).toList());
+  }
 
-              if (event['eventType'] == "volunteer") {
-                var signUps = List<SignedUpMembers>.from(event['signUps'] //
-                    .map((map) => SignedUpMembers(
-                          uid: map['uid'],
-                          fullName: map['fullName'],
-                          phoneNumber: map['phoneNumber'],
-                          emailAddress: map['emailAddress'],
-                        )));
+  Stream<Event?> streamEvent(String id) {
+    return _events.doc(id).snapshots().map(eventFromDocumentSnapshot);
+  }
 
-                return Event(
-                  id: event.id,
-                  eventType: EventType.volunteer,
-                  boardOnly: event['boardOnly'],
-                  title: event['title'],
-                  description: event['description'],
-                  location: event['location'],
-                  start: event['start'].toDate(),
-                  end: event['end'].toDate(),
-                  capacity: event['capacity'],
-                  totalRaised: event['totalRaised'].toDouble(),
-                  signUpsId: List<String>.from(event['signUpsId']),
-                  signUps: signUps,
-                );
-              }
+  Stream<List<History>?> streamHistory(String uid) {
+    return _histories //
+        .where('uid', isEqualTo: uid)
+        .snapshots()
+        .map((snapshot) => snapshot.docs)
+        .map((histories) => histories.map(historyFromDocumentSnapshot).toList());
+  }
 
-              throw Exception("Invalid Event Type");
-            },
-          ).toList(),
-        );
+  Future<void> checkOutVolunteer(String uid, String eid) async {
+    await _events //
+        .doc(eid)
+        .update({
+      "checkedId": FieldValue.arrayUnion([uid])
+    });
   }
 
   Future<void> signUpToVolunteerEvent(Member member, String eid) async {
@@ -120,6 +96,7 @@ class FirebaseService extends ChangeNotifier {
         {
           "uid": member.uid,
           "fullName": member.fullName,
+          "gradeLevel": member.gradeLevel,
           "phoneNumber": member.phoneNumber,
           "emailAddress": member.emailAddress,
         }
@@ -136,11 +113,78 @@ class FirebaseService extends ChangeNotifier {
         {
           "uid": member.uid,
           "fullName": member.fullName,
+          "gradeLevel": member.gradeLevel,
           "phoneNumber": member.phoneNumber,
           "emailAddress": member.emailAddress,
         }
       ])
     });
+  }
+
+  Future<void> updateMemberPMC(
+    String uid, {
+    int points = 0,
+    int minutes = 0,
+    double collection = 0,
+  }) async {
+    updateMemberFields(uid, {
+      if (points != 0) 'points': FieldValue.increment(points),
+      if (minutes != 0) 'minutes': FieldValue.increment(minutes),
+      if (collection != 0) 'collection': FieldValue.increment(collection),
+    });
+  }
+
+  Future<void> createHistory(
+    String uid, {
+    Event? event,
+    TimeOfDay? in_,
+    TimeOfDay? out,
+    String? message,
+    int pointsEarned = 0,
+    int minutesEarned = 0,
+    double collectionEarned = 0,
+  }) async {
+    if (event != null) {
+      final inDate = DateTime(
+        event.start.year,
+        event.start.month,
+        event.start.day,
+        in_!.hour,
+        in_.minute,
+      );
+
+      final outDate = DateTime(
+        event.end.year,
+        event.end.month,
+        event.end.day,
+        out!.hour,
+        out.minute,
+      );
+
+      await _histories.add({
+        'uid': uid,
+        'eventId': event.id,
+        'eventTitle': event.title,
+        'in': inDate,
+        'out': outDate,
+        if (message != null) 'message': message,
+        'pointsEarned': pointsEarned,
+        'minutesEarned': minutesEarned,
+        'collectionEarned': collectionEarned,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    } else {
+      assert(message != null);
+
+      await _histories.add({
+        'uid': uid,
+        'message': message,
+        'pointsEarned': pointsEarned,
+        'minutesEarned': minutesEarned,
+        'collectionEarned': collectionEarned,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    }
   }
 
   Future<void> login(BuildContext context, String email, String password) async {
@@ -179,27 +223,77 @@ class FirebaseService extends ChangeNotifier {
     _auth.signOut();
   }
 
-  Event? eventFromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    if (snapshot.exists) {
-      switch (snapshot['eventType']) {
-        case "attendance":
-          return Event(
-            id: snapshot['id'],
-            eventType: EventType.attendance,
-            boardOnly: snapshot['boardOnly'],
-            title: snapshot['title'],
-            description: snapshot['description'],
-            location: snapshot['location'],
-            start: snapshot['start'],
-            end: snapshot['end'],
-            pointReward: snapshot['pointReward'],
-          );
-
-        case "volunteer":
-      }
+  Event eventFromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    if (snapshot['eventType'] == "attendance") {
+      return Event(
+        id: snapshot.id,
+        eventType: EventType.attendance,
+        boardOnly: snapshot['boardOnly'],
+        title: snapshot['title'],
+        description: snapshot['description'],
+        location: snapshot['location'],
+        start: snapshot['start'].toDate(),
+        end: snapshot['end'].toDate(),
+        pointReward: snapshot['pointReward'],
+      );
     }
 
-    return null;
+    if (snapshot['eventType'] == "volunteer") {
+      var signUps = List<SignedUpMembers>.from(snapshot['signUps'] //
+          .map((map) => SignedUpMembers(
+                uid: map['uid'],
+                fullName: map['fullName'],
+                gradeLevel: map['gradeLevel'],
+                phoneNumber: map['phoneNumber'],
+                emailAddress: map['emailAddress'],
+              )));
+
+      return Event(
+        id: snapshot.id,
+        eventType: EventType.volunteer,
+        boardOnly: snapshot['boardOnly'],
+        title: snapshot['title'],
+        description: snapshot['description'],
+        location: snapshot['location'],
+        start: snapshot['start'].toDate(),
+        end: snapshot['end'].toDate(),
+        capacity: snapshot['capacity'],
+        totalRaised: snapshot['totalRaised'].toDouble(),
+        checkedId: List<String>.from(snapshot['checkedId']),
+        signUpsId: List<String>.from(snapshot['signUpsId']),
+        signUps: signUps,
+      );
+    }
+
+    throw Exception("Invalid Event Type");
+  }
+
+  History historyFromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    var data = snapshot.data();
+
+    if (data!.containsKey("eventId")) {
+      return History(
+        uid: data['uid'],
+        eid: data['eventId'],
+        eventTitle: data['eventTitle'],
+        in_: TimeOfDay.fromDateTime(data['in'].toDate()),
+        out: TimeOfDay.fromDateTime(data['out'].toDate()),
+        message: data['message'],
+        pointsEarned: data['pointsEarned'],
+        minutesEarned: data['minutesEarned'],
+        collectionEarned: data['collectionEarned'].toDouble(),
+        timestamp: data['timestamp'],
+      );
+    }
+
+    return History(
+      uid: data['uid'],
+      message: data['message'],
+      pointsEarned: data['pointsEarned'],
+      minutesEarned: data['minutesEarned'],
+      collectionEarned: data['collectionEarned'].toDouble(),
+      timestamp: data['timestamp'],
+    );
   }
 
   Member? memberFromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {

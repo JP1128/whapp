@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whapp/models/event.dart';
+import 'package:whapp/models/history.dart';
 import 'package:whapp/models/member.dart';
 import 'package:whapp/pages/event_pages/event_creation_page.dart';
 import 'package:whapp/pages/home_pages/directory_page.dart';
 import 'package:whapp/pages/home_pages/event_page.dart';
+import 'package:whapp/pages/home_pages/history_page.dart';
 import 'package:whapp/pages/home_pages/profile_page.dart';
 import 'package:whapp/services/firebase_service.dart';
 
@@ -41,10 +43,10 @@ class _HomePageState extends State<HomePage> {
             initialData: const [],
             child: EventPage(),
           ),
-          Scaffold(
-            appBar: AppBar(
-              title: const Text("History"),
-            ),
+          StreamProvider<List<History>?>.value(
+            value: FirebaseService.instance.streamHistory(member.uid),
+            initialData: const [],
+            child: HistoryPage(),
           ),
           if (isBoard) const DirectoryPage(),
           ProfilePage(member),

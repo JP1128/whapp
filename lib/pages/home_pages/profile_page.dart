@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:whapp/constants/constants.dart';
 import 'package:whapp/constants/theme.dart';
@@ -22,6 +26,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final _fk = GlobalKey<FormBuilderState>();
+
   @override
   Widget build(BuildContext context) {
     var currentMember = Provider.of<Member?>(context);
@@ -55,7 +61,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   title: const Text("My Profile"),
                   actions: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showWIP(context);
+                      },
                       icon: const Icon(Icons.edit_outlined),
                     ),
                   ],
@@ -100,14 +108,15 @@ class _ProfilePageState extends State<ProfilePage> {
           SliverList(
             delegate: SliverChildListDelegate([
               Center(
-                child: CircleAvatar(
-                  backgroundColor: primaryColor,
-                  radius: 75,
-                  child: Text(
-                    initials,
-                    style: Theme.of(context).primaryTextTheme.displayMedium,
-                  ),
-                ),
+                // child: CircleAvatar(
+                //   backgroundColor: primaryColor,
+                //   radius: 75,
+                //   child: Text(
+                //     initials,
+                //     style: Theme.of(context).primaryTextTheme.displayMedium,
+                //   ),
+                // ),
+                child: getAvatar(profileOwner.uid, 150),
               ),
               const SizedBox(height: 20),
               Center(
@@ -167,6 +176,173 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               if (isAdmin || !same && isBoard) ...[
                 const SizedBox(height: 30),
+                Padding(
+                  padding: hPad,
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      primary: primaryColor,
+                    ),
+                    onPressed: () {
+                      showBarModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return CustomScrollView(
+                            slivers: [
+                              SliverToBoxAdapter(
+                                child: Padding(
+                                  padding: defaultPadding,
+                                  child: FormBuilder(
+                                    key: _fk,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "Manual entry",
+                                          style: Theme.of(context).textTheme.displayLarge,
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          "Specify how much points, minutes, and/or collection the member will be rewarded, and describe the reason.",
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                        ),
+                                        const SizedBox(height: 50),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: FormBuilderTextField(
+                                                name: "pointsEarned",
+                                                style: Theme.of(context).textTheme.bodyMedium,
+                                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                textInputAction: TextInputAction.next,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  floatingLabelAlignment: FloatingLabelAlignment.center,
+                                                  label: Text("Points"),
+                                                ),
+                                                textAlign: TextAlign.center,
+                                                validator: FormBuilderValidators.compose(
+                                                  [
+                                                    FormBuilderValidators.numeric(errorText: "The input must be numeric"),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: FormBuilderTextField(
+                                                name: "minutesEarned",
+                                                style: Theme.of(context).textTheme.bodyMedium,
+                                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                textInputAction: TextInputAction.next,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  floatingLabelAlignment: FloatingLabelAlignment.center,
+                                                  label: Text("Minutes"),
+                                                ),
+                                                textAlign: TextAlign.center,
+                                                validator: FormBuilderValidators.compose(
+                                                  [
+                                                    FormBuilderValidators.numeric(errorText: "The input must be numeric"),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Expanded(
+                                              child: FormBuilderTextField(
+                                                name: "collectionEarned",
+                                                style: Theme.of(context).textTheme.bodyMedium,
+                                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                                textInputAction: TextInputAction.next,
+                                                keyboardType: TextInputType.number,
+                                                decoration: const InputDecoration(
+                                                  floatingLabelAlignment: FloatingLabelAlignment.center,
+                                                  label: Text("Collection"),
+                                                  prefixText: '\$ ',
+                                                ),
+                                                textAlign: TextAlign.center,
+                                                validator: FormBuilderValidators.compose(
+                                                  [
+                                                    FormBuilderValidators.numeric(errorText: "The input must be numeric"),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        FormBuilderTextField(
+                                          name: "message",
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                          textCapitalization: TextCapitalization.sentences,
+                                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                                          textInputAction: TextInputAction.newline,
+                                          keyboardType: TextInputType.multiline,
+                                          decoration: const InputDecoration(
+                                            label: Text("Reason for the entry"),
+                                          ),
+                                          textAlignVertical: TextAlignVertical.top,
+                                          maxLines: 6,
+                                          maxLength: 256,
+                                          maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                                          validator: FormBuilderValidators.compose(
+                                            [
+                                              FormBuilderValidators.required(errorText: "Enter the reason"),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 30),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            var cs = _fk.currentState;
+                                            if (cs != null && cs.saveAndValidate()) {
+                                              final values = cs.value;
+
+                                              final p = int.tryParse(values['pointsEarned'] ?? "") ?? 0;
+                                              final m = int.tryParse(values['minutesEarned'] ?? "") ?? 0;
+                                              final c = double.tryParse(values['collectionEarned'] ?? "") ?? 0;
+                                              FirebaseService.instance.updateMemberPMC(
+                                                profileOwner.uid,
+                                                points: p,
+                                                minutes: m,
+                                                collection: c,
+                                              );
+
+                                              final message = values['message'];
+                                              FirebaseService.instance.createHistory(
+                                                profileOwner.uid,
+                                                message: message,
+                                                pointsEarned: p,
+                                                minutesEarned: m,
+                                                collectionEarned: c,
+                                              );
+
+                                              Navigator.pop(context);
+                                            }
+                                          },
+                                          child: const Text("Submit"),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text("Manual Entry"),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
                 Padding(
                   padding: hPad,
                   child: OutlinedButton(

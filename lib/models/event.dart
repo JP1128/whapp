@@ -15,6 +15,7 @@ class Event {
     this.minMinutes,
     this.minCollection,
     this.totalRaised,
+    this.checkedId,
     this.signUpsId,
     this.signUps,
   });
@@ -40,6 +41,7 @@ class Event {
   int? minCollection;
   double? totalRaised;
 
+  List<String>? checkedId;
   List<String>? signUpsId;
   List<SignedUpMembers>? signUps;
 }
@@ -48,12 +50,14 @@ class SignedUpMembers {
   SignedUpMembers({
     required this.uid,
     required this.fullName,
+    required this.gradeLevel,
     required this.phoneNumber,
     required this.emailAddress,
   });
 
   String uid;
   String fullName;
+  String gradeLevel;
   String phoneNumber;
   String emailAddress;
 }

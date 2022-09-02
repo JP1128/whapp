@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -35,6 +39,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
   String? _email;
   String? _password;
+
+  Uint8List? avatar;
 
   @override
   Widget build(BuildContext context) {
@@ -237,6 +243,16 @@ class _SignUpPageState extends State<SignUpPage> {
                             validator: FormBuilderValidators.compose(
                               [
                                 FormBuilderValidators.required(errorText: "Enter your street address"),
+                                (value) {
+                                  if (value == null) return null;
+
+                                  value = value.toLowerCase();
+                                  if (value.contains('ga') || //
+                                      value.contains('georgia') ||
+                                      value.contains('marietta')) {
+                                    return "Do not include city and state";
+                                  }
+                                }
                               ],
                             ),
                             onSaved: (val) => _streetAddress = val,
@@ -409,6 +425,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         (userCredential) {
                                           if (userCredential != null) {
                                             var user = userCredential.user;
+                                            Image.network("https://source.boringavatars.com/beam");
                                             fs.updateMember(Member(
                                               uid: user!.uid,
                                               emailAddress: _email!,
