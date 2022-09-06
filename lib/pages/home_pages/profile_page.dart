@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -12,6 +15,7 @@ import 'package:whapp/helpers/helper.dart';
 import 'package:whapp/helpers/pair.dart';
 import 'package:whapp/models/member.dart';
 import 'package:whapp/services/firebase_service.dart';
+import 'package:whapp/widgets/avatar_painter.dart';
 import 'package:whapp/widgets/information_block.dart';
 import 'package:whapp/widgets/pmc_widget.dart';
 
@@ -65,15 +69,30 @@ class _ProfilePageState extends State<ProfilePage> {
                     IconButton(
                       onPressed: () {
                         showWIP(context);
-                        getAvatarString(profileOwner.uid) //
-                            .then(
-                          (value) => FirebaseService.instance.updateMemberFields(
-                            profileOwner.uid,
-                            {
-                              'photoURL': value,
-                            },
-                          ),
-                        );
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return SimpleDialog(
+                                contentPadding: const EdgeInsets.all(10),
+                                children: [
+                                  StatefulBuilder(
+                                    builder: (context, setState) {
+                                      var random = Random();
+
+                                      return GestureDetector(
+                                        onTap: () => setState(() {}),
+                                        child: ClipRect(
+                                          child: CustomPaint(
+                                            painter: AvatarPainter(random.nextInt(299792458).toString(), 360),
+                                            size: Size(360, 360),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
                       },
                       icon: const Icon(Icons.edit_outlined),
                     ),

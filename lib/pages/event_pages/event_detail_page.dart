@@ -1,6 +1,9 @@
+import 'dart:math';
+
 import 'package:algolia/algolia.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:whapp/constants/constants.dart';
@@ -30,6 +33,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
 
   TimeOfDay? startTime;
   TimeOfDay? endTime;
+  double? raised;
 
   @override
   Widget build(BuildContext context) {
@@ -355,6 +359,102 @@ class _EventDetailPageState extends State<EventDetailPage> {
                                 );
                               });
                         }
+
+                        if (isBoard && checked) {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return StatefulBuilder(
+                                  builder: (context, setState) => Dialog(
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              Navigator.of(context, rootNavigator: true).push(
+                                                MaterialPageRoute(builder: (context) {
+                                                  return StreamBuilder<Member?>(
+                                                    stream: FirebaseService.instance.memberChangesById(member.uid),
+                                                    builder: (context, snapshot) {
+                                                      if (snapshot.hasData) {
+                                                        return StreamProvider.value(
+                                                          value: FirebaseService.instance.memberChanges(),
+                                                          initialData: null,
+                                                          lazy: true,
+                                                          child: ProfilePage(snapshot.data!),
+                                                        );
+                                                      }
+
+                                                      return const Center(child: CircularProgressIndicator());
+                                                    },
+                                                  );
+                                                }),
+                                              );
+                                            },
+                                            child: showAvatar(member.photoURL, 100),
+                                          ),
+                                          const SizedBox(height: 20),
+                                          Text(
+                                            member.fullName,
+                                            style: Theme.of(context).textTheme.titleLarge,
+                                          ),
+                                          const SizedBox(height: 20),
+                                          Text(member.emailAddress),
+                                          const SizedBox(height: 5),
+                                          Text(member.phoneNumber),
+                                          const SizedBox(height: 20),
+                                          FormBuilder(
+                                            key: _fk,
+                                            child: FormBuilderTextField(
+                                              name: "collection",
+                                              style: Theme.of(context).textTheme.bodyMedium,
+                                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                                              textInputAction: TextInputAction.next,
+                                              keyboardType: TextInputType.number,
+                                              decoration: const InputDecoration(
+                                                label: Text("Personal collection"),
+                                                prefixText: "\$ ",
+                                              ),
+                                              validator: FormBuilderValidators.compose(
+                                                [
+                                                  FormBuilderValidators.numeric(errorText: "The input must be numeric"),
+                                                  FormBuilderValidators.min(0, errorText: "The number must be at least 0")
+                                                ],
+                                              ),
+                                              onSaved: (val) {
+                                                var doubleVal = double.parse(val!);
+                                                raised = ((doubleVal * 100).roundToDouble() / 100);
+                                              },
+                                            ),
+                                          ),
+                                          const SizedBox(height: 20),
+                                          ElevatedButton(
+                                            onPressed: () {
+                                              if (_fk.currentState!.saveAndValidate()) {
+                                                FirebaseService.instance.updateMemberPMC(
+                                                  member.uid,
+                                                  collection: raised!,
+                                                );
+                                                FirebaseService.instance.createHistory(
+                                                  member.uid,
+                                                  collectionEarned: raised!,
+                                                  message: "Raised \$$raised at ${event.title}",
+                                                );
+                                                Navigator.pop(context);
+                                              }
+                                            },
+                                            child: const Text("Report Personal Collection"),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              });
+                        }
                       },
                       child: Row(
                         children: [
@@ -433,7 +533,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                   label: const Text("Sign Up"),
                 ),
               ),
-            if (isVolunteer && isSignedUp)
+            if (isVolunteer && isSignedUp && !isChecked)
               Expanded(
                 child: FloatingActionButton.extended(
                   onPressed: () {
@@ -459,7 +559,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
                             var now = DateTime.now();
                             var diff = event.start.difference(now);
                             var isLateNotice = diff.inHours < 24;
-                            print(isLateNotice);
 
                             return AlertDialog(
                               content: Column(
@@ -483,7 +582,12 @@ class _EventDetailPageState extends State<EventDetailPage> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    FirebaseService.instance.cancelVolunteerEvent(currentMember, event.id);
+                                    for (var signedUpMember in event.signUps!) {
+                                      if (signedUpMember.uid == currentMember.uid) {
+                                        FirebaseService.instance.cancelVolunteerEvent(signedUpMember, event.id);
+                                        break;
+                                      }
+                                    }
                                     Navigator.pop(context);
                                   },
                                   child: const Text("Yes"),

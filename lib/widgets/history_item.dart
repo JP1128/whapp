@@ -26,34 +26,36 @@ class HistoryItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  history.eventTitle!,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                if (history.message != null)
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    history.message!,
-                    style: Theme.of(context).textTheme.bodySmall,
+                    history.eventTitle!,
+                    style: Theme.of(context).textTheme.titleSmall,
                   ),
-                if (history.pointsEarned != 0)
-                  Text(
-                    "+ ${history.pointsEarned} points",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                if (history.minutesEarned != 0)
-                  Text(
-                    "+ ${history.minutesEarned} minutes",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                if (history.collectionEarned != 0)
-                  Text(
-                    "+ \$${history.collectionEarned}",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-              ],
+                  if (history.message != null)
+                    Text(
+                      history.message!,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  if (history.pointsEarned != 0)
+                    Text(
+                      "+ ${history.pointsEarned} points",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  if (history.minutesEarned != 0)
+                    Text(
+                      "+ ${history.minutesEarned} minutes",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  if (history.collectionEarned != 0)
+                    Text(
+                      "+ \$${history.collectionEarned}",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                ],
+              ),
             ),
           ],
         ),
@@ -74,29 +76,31 @@ class HistoryItem extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  history.message!,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                if (history.pointsEarned != 0)
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    "+ ${history.pointsEarned} points",
+                    history.message!,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
-                if (history.minutesEarned != 0)
-                  Text(
-                    "+ ${history.minutesEarned} minutes",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                if (history.collectionEarned != 0)
-                  Text(
-                    "+ \$${history.collectionEarned}",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-              ],
+                  if (history.pointsEarned != 0)
+                    Text(
+                      "+ ${history.pointsEarned} points",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  if (history.minutesEarned != 0)
+                    Text(
+                      "+ ${history.minutesEarned} minutes",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  if (history.collectionEarned != 0)
+                    Text(
+                      "+ \$${history.collectionEarned}",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                ],
+              ),
             ),
           ],
         ),

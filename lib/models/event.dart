@@ -54,6 +54,7 @@ class SignedUpMembers {
     required this.gradeLevel,
     required this.phoneNumber,
     required this.emailAddress,
+    this.raised,
   });
 
   String uid;
@@ -62,4 +63,5 @@ class SignedUpMembers {
   String gradeLevel;
   String phoneNumber;
   String emailAddress;
+  double? raised;
 }

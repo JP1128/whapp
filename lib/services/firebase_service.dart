@@ -101,12 +101,13 @@ class FirebaseService extends ChangeNotifier {
           "gradeLevel": member.gradeLevel,
           "phoneNumber": member.phoneNumber,
           "emailAddress": member.emailAddress,
+          "raised": 0.toDouble(),
         }
       ])
     });
   }
 
-  Future<void> cancelVolunteerEvent(Member member, String eid) async {
+  Future<void> cancelVolunteerEvent(SignedUpMembers member, String eid) async {
     await _events //
         .doc(eid)
         .update({
@@ -119,10 +120,13 @@ class FirebaseService extends ChangeNotifier {
           "gradeLevel": member.gradeLevel,
           "phoneNumber": member.phoneNumber,
           "emailAddress": member.emailAddress,
+          "raised": member.raised,
         }
       ])
     });
   }
+
+  Future<void> updateVolunteerEvent(String eid) async {}
 
   Future<void> updateMemberPMC(
     String uid, {
@@ -250,6 +254,7 @@ class FirebaseService extends ChangeNotifier {
                 gradeLevel: map['gradeLevel'],
                 phoneNumber: map['phoneNumber'],
                 emailAddress: map['emailAddress'],
+                raised: map['raised'].toDouble(),
               )));
 
       return Event(
