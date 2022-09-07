@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:algolia/algolia.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -258,7 +256,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                                                   }),
                                                 );
                                               },
-                                              child: showAvatar(member.photoURL, 100)),
+                                              child: showAvatar(member.uid, 100)),
                                           const SizedBox(height: 20),
                                           Text(
                                             member.fullName,
@@ -394,7 +392,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                                                 }),
                                               );
                                             },
-                                            child: showAvatar(member.photoURL, 100),
+                                            child: showAvatar(member.uid, 100),
                                           ),
                                           const SizedBox(height: 20),
                                           Text(
@@ -458,7 +456,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                       },
                       child: Row(
                         children: [
-                          showAvatar(member.photoURL, 50),
+                          showAvatar(member.uid, 30),
                           const SizedBox(width: 20),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

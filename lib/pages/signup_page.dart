@@ -425,30 +425,28 @@ class _SignUpPageState extends State<SignUpPage> {
                                         (userCredential) {
                                           if (userCredential != null) {
                                             var user = userCredential.user;
-                                            getAvatarString(user!.uid).then((photoURL) {
-                                              fs.updateMember(Member(
-                                                uid: user.uid,
-                                                emailAddress: _email!,
-                                                photoURL: photoURL,
-                                                role: 3,
-                                                points: 0,
-                                                minutes: 0,
-                                                collection: 0.0,
-                                                fullName: _fullName!,
-                                                studentId: _studentId!,
-                                                homeroom: _homeroom!,
-                                                gradeLevel: _gradeLevel!,
-                                                phoneNumber: _phoneNumber!,
-                                                streetAddress: _streetAddress!,
-                                                tShirtSize: _tShirtSize!,
-                                                tShirtReceived: false,
-                                                duesPaid: false,
-                                              ));
-                                            });
+                                            fs.updateMember(Member(
+                                              uid: user!.uid,
+                                              emailAddress: _email!,
+                                              photoURL: null,
+                                              role: 3,
+                                              points: 0,
+                                              minutes: 0,
+                                              collection: 0.0,
+                                              fullName: _fullName!,
+                                              studentId: _studentId!,
+                                              homeroom: _homeroom!,
+                                              gradeLevel: _gradeLevel!,
+                                              phoneNumber: _phoneNumber!,
+                                              streetAddress: _streetAddress!,
+                                              tShirtSize: _tShirtSize!,
+                                              tShirtReceived: false,
+                                              duesPaid: false,
+                                            ));
                                           }
+                                          fs.login(context, _email!, _password!);
                                         },
                                       );
-                                      fs.login(context, _email!, _password!);
                                     }
                                   },
                                   child: const Text("Create account"),

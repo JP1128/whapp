@@ -32,7 +32,7 @@ class MemberItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          showAvatar(photoURL, 50),
+          showAvatar(uid, 35),
           const SizedBox(width: 20),
           Expanded(
             child: Column(

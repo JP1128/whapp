@@ -147,11 +147,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 //   ),
                 // ),
                 // child: getAvatar(profileOwner.uid, 150),
-                child: SvgPicture.string(
-                  profileOwner.photoURL!,
-                  width: 150,
-                  height: 150,
-                ),
+                child: showAvatar(profileOwner.uid, 75),
               ),
               const SizedBox(height: 20),
               Center(
