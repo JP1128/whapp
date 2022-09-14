@@ -5,7 +5,6 @@ import 'package:whapp/helpers/helper.dart';
 class MemberItem extends StatelessWidget {
   const MemberItem(
     this.uid,
-    this.photoURL,
     this.fullName,
     this.homeroom,
     this.gradeLevel,
@@ -16,7 +15,6 @@ class MemberItem extends StatelessWidget {
   }) : super(key: key);
 
   final String uid;
-  final String photoURL;
   final String fullName;
   final String homeroom;
   final String gradeLevel;

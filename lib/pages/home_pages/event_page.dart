@@ -17,6 +17,26 @@ class EventPage extends StatefulWidget {
 }
 
 class _EventPageState extends State<EventPage> {
+  bool showBackToTop = false;
+  bool showPast = false;
+
+  final _sc = ScrollController();
+
+  @override
+  void initState() {
+    _sc.addListener(() {
+      setState(() {
+        if (_sc.offset >= 400) {
+          showBackToTop = true;
+        } else {
+          showBackToTop = false;
+        }
+      });
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     var currentMember = Provider.of<Member?>(context);
@@ -31,10 +51,18 @@ class _EventPageState extends State<EventPage> {
             showWIP(context);
           },
           icon: const Icon(
-            Icons.notifications_outlined,
+            Icons.history_outlined,
           ),
         ),
         actions: [
+          IconButton(
+            onPressed: () {
+              showWIP(context);
+            },
+            icon: const Icon(
+              Icons.notifications_outlined,
+            ),
+          ),
           if (isBoard)
             IconButton(
               onPressed: () {
@@ -50,6 +78,20 @@ class _EventPageState extends State<EventPage> {
             ),
         ],
       ),
+      floatingActionButton: showBackToTop
+          ? FloatingActionButton(
+              onPressed: () {
+                _sc.animateTo(
+                  0,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeIn,
+                );
+              },
+              child: Icon(
+                Icons.arrow_upward_outlined,
+              ),
+            )
+          : null,
       body: Builder(builder: (context) {
         var events = Provider.of<List<Event>?>(context);
 
@@ -65,6 +107,7 @@ class _EventPageState extends State<EventPage> {
         eventListing.sort((e1, e2) => e1.start.isAfter(e2.start) ? 1 : 0);
 
         return CustomScrollView(
+          controller: _sc,
           physics: const BouncingScrollPhysics(),
           slivers: [
             SliverList(
@@ -93,7 +136,7 @@ class _EventPageState extends State<EventPage> {
                               }),
                             );
                           },
-                          child: EventItem(data),
+                          child: EventItem(data, currentMember.uid),
                         ),
                       ),
                       if (index < eventListing.length) const SizedBox(height: 10),

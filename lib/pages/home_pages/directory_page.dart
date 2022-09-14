@@ -45,6 +45,7 @@ class _DirectoryPageState extends State<DirectoryPage> {
               onChanged: (value) async {
                 var query = _algolia.instance //
                     .index('memberIndex')
+                    .setHitsPerPage(200)
                     .query(value.isEmpty ? "*" : value);
 
                 await query
@@ -64,7 +65,6 @@ class _DirectoryPageState extends State<DirectoryPage> {
                 child: InkWell(
                   child: MemberItem(
                     data['objectID'],
-                    data['photoURL'],
                     data['fullName'],
                     data['homeroom'],
                     data['gradeLevel'],

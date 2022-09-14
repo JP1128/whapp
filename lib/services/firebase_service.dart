@@ -1,8 +1,9 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:whapp/helpers/algolia_service.dart';
 import 'package:whapp/helpers/helper.dart';
 import 'package:whapp/models/event.dart';
 import 'package:whapp/models/history.dart';
@@ -61,11 +62,34 @@ class FirebaseService extends ChangeNotifier {
       .doc(id)
       .delete();
 
-  Stream<List<Event>?> streamEvents() {
+  Stream<List<Event>?> streamEvents({
+    DateTime? after,
+    DateTime? before,
+  }) {
     return _events //
         .snapshots()
         .map((snapshot) => snapshot.docs)
-        .map((events) => events.map(eventFromDocumentSnapshot).toList());
+        .map((events) {
+      var eventsFiltered = events.map(eventFromDocumentSnapshot);
+
+      if (after != null) {
+        eventsFiltered = eventsFiltered.where((event) => isAfter(event, after));
+      }
+
+      if (before != null) {
+        eventsFiltered = eventsFiltered.where((event) => isBefore(event, before));
+      }
+
+      return eventsFiltered.toList();
+    });
+  }
+
+  bool isAfter(Event event, DateTime dateTime) {
+    return event.start.isAfter(DateTime(dateTime.year, dateTime.month, dateTime.day));
+  }
+
+  bool isBefore(Event event, DateTime dateTime) {
+    return event.start.isBefore(DateTime(dateTime.year, dateTime.month, dateTime.day).add(Duration(days: 1)));
   }
 
   Stream<Event?> streamEvent(String id) {
@@ -96,7 +120,6 @@ class FirebaseService extends ChangeNotifier {
       "signUps": FieldValue.arrayUnion([
         {
           "uid": member.uid,
-          "photoURL": member.photoURL,
           "fullName": member.fullName,
           "gradeLevel": member.gradeLevel,
           "phoneNumber": member.phoneNumber,
@@ -115,7 +138,6 @@ class FirebaseService extends ChangeNotifier {
       "signUps": FieldValue.arrayRemove([
         {
           "uid": member.uid,
-          "photoURL": member.photoURL,
           "fullName": member.fullName,
           "gradeLevel": member.gradeLevel,
           "phoneNumber": member.phoneNumber,
@@ -247,15 +269,16 @@ class FirebaseService extends ChangeNotifier {
 
     if (snapshot['eventType'] == "volunteer") {
       var signUps = List<SignedUpMembers>.from(snapshot['signUps'] //
-          .map((map) => SignedUpMembers(
-                uid: map['uid'],
-                photoURL: map['photoURL'],
-                fullName: map['fullName'],
-                gradeLevel: map['gradeLevel'],
-                phoneNumber: map['phoneNumber'],
-                emailAddress: map['emailAddress'],
-                raised: map['raised'].toDouble(),
-              )));
+          .map((map) {
+        return SignedUpMembers(
+          uid: map['uid'],
+          fullName: map['fullName'],
+          gradeLevel: map['gradeLevel'],
+          phoneNumber: map['phoneNumber'],
+          emailAddress: map['emailAddress'],
+          raised: map['raised'].toDouble(),
+        );
+      }));
 
       return Event(
         id: snapshot.id,

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:algolia/algolia.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -41,6 +43,8 @@ class _EventDetailPageState extends State<EventDetailPage> {
     if (currentMember == null || event == null) {
       return const Center(child: CircularProgressIndicator());
     }
+
+    log(event.title);
 
     var isBoard = currentMember.role <= 2;
     var isVolunteer = event.eventType == EventType.volunteer;
@@ -502,14 +506,16 @@ class _EventDetailPageState extends State<EventDetailPage> {
                   showBarModalBottomSheet(
                     context: context,
                     builder: (context) {
+                      var checked = event.signUps!.where((e) => event.checkedId!.contains(e.uid)).toList();
+
                       return CustomScrollView(
                         physics: const BouncingScrollPhysics(),
                         slivers: [
                           SliverList(
                             delegate: SliverChildBuilderDelegate(
-                              childCount: event.signUps!.length,
+                              childCount: checked.length,
                               (context, index) {
-                                var member = event.signUps![index];
+                                var member = checked[index];
                               },
                             ),
                           ),
@@ -652,7 +658,6 @@ class _EventDetailPageState extends State<EventDetailPage> {
                                     child: InkWell(
                                       child: MemberItem(
                                         data['objectID'],
-                                        data['photoURL'],
                                         data['fullName'],
                                         data['homeroom'],
                                         data['gradeLevel'],

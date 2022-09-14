@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
         controller: _pageController,
         children: [
           StreamProvider<List<Event>?>.value(
-            value: FirebaseService.instance.streamEvents(),
+            value: FirebaseService.instance.streamEvents(after: DateTime.now()),
             initialData: const [],
             child: EventPage(),
           ),

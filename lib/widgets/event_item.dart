@@ -5,9 +5,10 @@ import 'package:whapp/helpers/helper.dart';
 import 'package:whapp/models/event.dart';
 
 class EventItem extends StatelessWidget {
-  const EventItem(this.event, {Key? key}) : super(key: key);
+  const EventItem(this.event, this.uid, {Key? key}) : super(key: key);
 
   final Event event;
+  final String uid;
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +16,18 @@ class EventItem extends StatelessWidget {
         ? attendanceAvatar
         : (event.eventType == EventType.volunteer //
             ? volunteerAvatar
-            : CircleAvatar());
+            : const CircleAvatar());
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
       decoration: BoxDecoration(
         color: Colors.white,
+        border: event.signUpsId!.contains(uid)
+            ? Border.all(
+                color: successColor,
+                width: 2,
+              )
+            : null,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(

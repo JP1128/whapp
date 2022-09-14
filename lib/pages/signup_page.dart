@@ -26,7 +26,6 @@ class _SignUpPageState extends State<SignUpPage> {
   final _pageController = PageController();
 
   var _hidePassword = true;
-  var _hideConfirmPassword = true;
 
   String? _fullName;
   String? _studentId;
@@ -247,9 +246,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   if (value == null) return null;
 
                                   value = value.toLowerCase();
-                                  if (value.contains('ga') || //
-                                      value.contains('georgia') ||
-                                      value.contains('marietta')) {
+                                  if (value.contains(',')) {
                                     return "Do not include city and state";
                                   }
                                 }
@@ -295,7 +292,6 @@ class _SignUpPageState extends State<SignUpPage> {
                               Flexible(
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    print(_fk.currentState!.fields.toString());
                                     if (_fk.currentState!.saveAndValidate()) {
                                       _pageController.nextPage(
                                         duration: const Duration(milliseconds: 600),
@@ -367,39 +363,6 @@ class _SignUpPageState extends State<SignUpPage> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          FormBuilderTextField(
-                            name: "confirmPassword",
-                            style: Theme.of(context).textTheme.bodyMedium,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            textInputAction: TextInputAction.done,
-                            autofillHints: const [AutofillHints.newPassword],
-                            keyboardType: TextInputType.visiblePassword,
-                            obscureText: _hideConfirmPassword,
-                            decoration: InputDecoration(
-                              label: const Text("Confirm Password"),
-                              suffixIcon: InkResponse(
-                                radius: 20,
-                                child: Icon(_hideConfirmPassword ? Icons.visibility : Icons.visibility_off),
-                                onTap: () => setState(() => _hideConfirmPassword = !_hideConfirmPassword),
-                              ),
-                            ),
-                            validator: FormBuilderValidators.compose(
-                              [
-                                FormBuilderValidators.required(errorText: "Enter your password again"),
-                                (val) {
-                                  if (val == null) return null;
-
-                                  if (_fk.currentState != null) {
-                                    if (val != _fk.currentState!.value['password']) {
-                                      return "The passwords must be the same";
-                                    }
-                                  }
-                                }
-                              ],
-                            ),
-                            onSaved: (val) => _password = val,
-                          ),
                           const SizedBox(height: 30),
                           Row(
                             children: [
@@ -420,7 +383,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   onPressed: () {
                                     var fs = FirebaseService.instance;
                                     if (_fk.currentState!.saveAndValidate()) {
-                                      fs.createAccount(context, _email!, _password!) //
+                                      fs.createAccount(context, _email!.trim(), _password!.trim()) //
                                           .then(
                                         (userCredential) {
                                           if (userCredential != null) {
