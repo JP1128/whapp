@@ -232,9 +232,15 @@ class _EventDetailPageState extends State<EventDetailPage> {
 
                                 return StatefulBuilder(
                                   builder: (context, setState) => Dialog(
+                                    insetPadding: const EdgeInsets.all(20.0),
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                                     child: Padding(
-                                      padding: const EdgeInsets.all(20),
+                                      padding: const EdgeInsets.only(
+                                        top: 30,
+                                        left: 30,
+                                        right: 30,
+                                        bottom: 10,
+                                      ),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
@@ -260,7 +266,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                                                   }),
                                                 );
                                               },
-                                              child: showAvatar(member.uid, 100)),
+                                              child: showAvatar(member.uid, 75)),
                                           const SizedBox(height: 20),
                                           Text(
                                             member.fullName,
@@ -323,37 +329,68 @@ class _EventDetailPageState extends State<EventDetailPage> {
                                             ],
                                           ),
                                           const SizedBox(height: 20),
-                                          ElevatedButton(
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // TextButton(
+                                              //   onPressed: () {},
+                                              //   icon: Icon(
+                                              //     Icons.delete_outline,
+                                              //   ),
+                                              //   color: errorColor,
+                                              // ),
+                                              // const SizedBox(width: 10),
+                                              Expanded(
+                                                child: Column(
+                                                  children: [
+                                                    ElevatedButton(
+                                                      onPressed: () {
+                                                        if (startTime!.hour >= endTime!.hour && startTime!.minute >= endTime!.minute) {
+                                                          showError(context, "Start time cannot be later than the end time.");
+                                                          return;
+                                                        }
+
+                                                        var minutes = minuteFromTimeOfDay(startTime!, endTime!);
+                                                        var points = minutes ~/ 10;
+
+                                                        FirebaseService.instance.checkOutVolunteer(member.uid, event.id);
+                                                        FirebaseService.instance.updateMemberPMC(
+                                                          member.uid,
+                                                          points: points,
+                                                          minutes: minutes,
+                                                        );
+                                                        FirebaseService.instance.createHistory(
+                                                          member.uid,
+                                                          event: event,
+                                                          in_: startTime,
+                                                          out: endTime,
+                                                          message: "Participated in the event.",
+                                                          pointsEarned: points,
+                                                          minutesEarned: minutes,
+                                                        );
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text("Check Out"),
+                                                    ),
+                                                    const SizedBox(height: 10),
+                                                    Text("${minuteFromTimeOfDay(startTime!, endTime!)} minutes"),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 5),
+                                          TextButton(
                                             onPressed: () {
-                                              if (startTime!.hour >= endTime!.hour && startTime!.minute >= endTime!.minute) {
-                                                showError(context, "Start time cannot be later than the end time.");
-                                                return;
-                                              }
-
-                                              var minutes = minuteFromTimeOfDay(startTime!, endTime!);
-                                              var points = minutes ~/ 10;
-
-                                              FirebaseService.instance.checkOutVolunteer(member.uid, event.id);
-                                              FirebaseService.instance.updateMemberPMC(
-                                                member.uid,
-                                                points: points,
-                                                minutes: minutes,
-                                              );
-                                              FirebaseService.instance.createHistory(
-                                                member.uid,
-                                                event: event,
-                                                in_: startTime,
-                                                out: endTime,
-                                                message: "Participated in the event.",
-                                                pointsEarned: points,
-                                                minutesEarned: minutes,
-                                              );
+                                              FirebaseService.instance.cancelVolunteerEvent(member, event.id);
                                               Navigator.pop(context);
                                             },
-                                            child: const Text("Check Out"),
+                                            style: TextButton.styleFrom(primary: errorColor),
+                                            child: const Text(
+                                              "Remove",
+                                              style: TextStyle(decoration: TextDecoration.underline),
+                                            ),
                                           ),
-                                          const SizedBox(height: 10),
-                                          Text("${minuteFromTimeOfDay(startTime!, endTime!)} minutes"),
                                         ],
                                       ),
                                     ),
@@ -496,7 +533,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
         ],
       ),
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.all(30),
+        padding: const EdgeInsets.all(30),
         child: Row(
           children: [
             if (isBoard && isVolunteer) ...[

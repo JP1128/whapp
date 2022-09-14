@@ -24,8 +24,8 @@ class EventItem extends StatelessWidget {
         color: Colors.white,
         border: event.signUpsId!.contains(uid)
             ? Border.all(
-                color: successColor,
-                width: 2,
+                color: successColor.withAlpha(100),
+                width: 3,
               )
             : null,
         borderRadius: BorderRadius.circular(15),
