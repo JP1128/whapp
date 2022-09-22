@@ -112,7 +112,7 @@ class FirebaseService extends ChangeNotifier {
     });
   }
 
-  Future<void> signUpToVolunteerEvent(Member member, String eid) async {
+  Future<void> signUpToEvent(SignedUpMembers member, String eid) async {
     await _events //
         .doc(eid)
         .update({
@@ -253,6 +253,18 @@ class FirebaseService extends ChangeNotifier {
   }
 
   Event eventFromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    var signUps = List<SignedUpMembers>.from(snapshot['signUps'] //
+        .map((map) {
+      return SignedUpMembers(
+        uid: map['uid'],
+        fullName: map['fullName'],
+        gradeLevel: map['gradeLevel'],
+        phoneNumber: map['phoneNumber'],
+        emailAddress: map['emailAddress'],
+        raised: map['raised'].toDouble(),
+      );
+    }));
+
     if (snapshot['eventType'] == "attendance") {
       return Event(
         id: snapshot.id,
@@ -264,22 +276,12 @@ class FirebaseService extends ChangeNotifier {
         start: snapshot['start'].toDate(),
         end: snapshot['end'].toDate(),
         pointReward: snapshot['pointReward'],
+        signUpsId: List<String>.from(snapshot['signUpsId']),
+        signUps: signUps,
       );
     }
 
     if (snapshot['eventType'] == "volunteer") {
-      var signUps = List<SignedUpMembers>.from(snapshot['signUps'] //
-          .map((map) {
-        return SignedUpMembers(
-          uid: map['uid'],
-          fullName: map['fullName'],
-          gradeLevel: map['gradeLevel'],
-          phoneNumber: map['phoneNumber'],
-          emailAddress: map['emailAddress'],
-          raised: map['raised'].toDouble(),
-        );
-      }));
-
       return Event(
         id: snapshot.id,
         eventType: EventType.volunteer,

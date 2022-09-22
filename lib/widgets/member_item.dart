@@ -11,7 +11,7 @@ class MemberItem extends StatelessWidget {
     this.phoneNumber,
     this.emailAddress, {
     Key? key,
-    this.icon = Icons.arrow_forward_ios_outlined,
+    this.icon = const Icon(Icons.arrow_forward_ios_outlined),
   }) : super(key: key);
 
   final String uid;
@@ -21,7 +21,7 @@ class MemberItem extends StatelessWidget {
   final String phoneNumber;
   final String emailAddress;
 
-  final IconData icon;
+  final Icon icon;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +71,7 @@ class MemberItem extends StatelessWidget {
               ],
             ),
           ),
-          Icon(icon, color: palette[6]),
+          icon
         ],
       ),
     );

@@ -18,16 +18,18 @@ class EventItem extends StatelessWidget {
             ? volunteerAvatar
             : const CircleAvatar());
 
+    bool isFull = event.capacity == event.signUpsId!.length;
+    bool isSignedUp = event.signUpsId!.contains(uid);
+
+    var border = null;
+    if (isFull) border = Border.all(color: errorColor.withAlpha(100), width: 3);
+    if (isSignedUp) border = Border.all(color: successColor.withAlpha(100), width: 3);
+
     return Container(
       padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: event.signUpsId!.contains(uid)
-            ? Border.all(
-                color: successColor.withAlpha(100),
-                width: 3,
-              )
-            : null,
+        border: border,
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(

@@ -362,6 +362,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 FormBuilderValidators.minLength(5, errorText: "Your password must be at least 5 characters"),
                               ],
                             ),
+                            onSaved: (val) => _password = val,
                           ),
                           const SizedBox(height: 30),
                           Row(
@@ -407,6 +408,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                               duesPaid: false,
                                             ));
                                           }
+                                          Navigator.of(context).pop();
                                           fs.login(context, _email!, _password!);
                                         },
                                       );

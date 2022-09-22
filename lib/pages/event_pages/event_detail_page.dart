@@ -83,11 +83,14 @@ class _EventDetailPageState extends State<EventDetailPage> {
               [
                 const SizedBox(height: 30),
                 if (event.boardOnly)
-                  Text(
-                    "Board member only",
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: palette[6],
-                        ),
+                  Padding(
+                    padding: hPad,
+                    child: Text(
+                      "Board member only",
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                            color: palette[6],
+                          ),
+                    ),
                   ),
                 Padding(
                   padding: hPad,
@@ -569,9 +572,31 @@ class _EventDetailPageState extends State<EventDetailPage> {
               Expanded(
                 child: FloatingActionButton.extended(
                   onPressed: () {
-                    FirebaseService.instance.signUpToVolunteerEvent(currentMember, event.id);
+                    var signedUpMember = SignedUpMembers(
+                      uid: currentMember.uid,
+                      fullName: currentMember.fullName,
+                      gradeLevel: currentMember.gradeLevel,
+                      phoneNumber: currentMember.phoneNumber,
+                      emailAddress: currentMember.emailAddress,
+                      raised: 0,
+                    );
+                    FirebaseService.instance.signUpToEvent(signedUpMember, event.id);
                   },
                   label: const Text("Sign Up"),
+                ),
+              ),
+            if (isVolunteer && !isSignedUp && (!isBoard && isFull))
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "This event is full. Request a permission from a board member to join this event.",
+                        style: TextStyle(color: errorColor),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             if (isVolunteer && isSignedUp && !isChecked)
@@ -655,60 +680,97 @@ class _EventDetailPageState extends State<EventDetailPage> {
                     showBarModalBottomSheet(
                       context: context,
                       builder: (context) {
-                        return CustomScrollView(
-                          physics: const BouncingScrollPhysics(),
-                          slivers: [
-                            SliverToBoxAdapter(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 30, bottom: 10, left: 20, right: 20),
-                                child: TextField(
-                                  controller: search,
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                  textCapitalization: TextCapitalization.words,
-                                  textInputAction: TextInputAction.done,
-                                  keyboardType: TextInputType.name,
-                                  decoration: const InputDecoration(
-                                    suffixIcon: Icon(Icons.search_rounded),
-                                    hintText: "Search members by name",
-                                  ),
-                                  onChanged: (value) async {
-                                    if (value.isNotEmpty) {
-                                      var query = _algolia.instance //
-                                          .index('memberIndex')
-                                          .query(value);
+                        return Provider.value(
+                          value: event,
+                          child: CustomScrollView(
+                            physics: const BouncingScrollPhysics(),
+                            slivers: [
+                              SliverToBoxAdapter(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 30, bottom: 10, left: 20, right: 20),
+                                  child: TextField(
+                                    controller: search,
+                                    style: Theme.of(context).textTheme.bodySmall,
+                                    textCapitalization: TextCapitalization.words,
+                                    textInputAction: TextInputAction.done,
+                                    keyboardType: TextInputType.name,
+                                    decoration: const InputDecoration(
+                                      suffixIcon: Icon(Icons.search_rounded),
+                                      hintText: "Search members by name",
+                                    ),
+                                    onChanged: (value) async {
+                                      if (value.isNotEmpty) {
+                                        var query = _algolia.instance //
+                                            .index('memberIndex')
+                                            .query(value);
 
-                                      await query
-                                          .getObjects() //
-                                          .then((value) => setState(() => _results = value.hits));
-                                    }
+                                        await query //
+                                            .getObjects()
+                                            .then((value) => setState(() => _results = value.hits));
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+                              SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  childCount: _results.length,
+                                  (context, index) {
+                                    var data = _results[index].data;
+
+                                    bool checkedIn = event.signUpsId!.contains(data['objectID']);
+
+                                    return StatefulBuilder(builder: (context, setState) {
+                                      return Padding(
+                                        padding: hPad,
+                                        child: InkWell(
+                                          child: MemberItem(
+                                            data['objectID'],
+                                            data['fullName'],
+                                            data['homeroom'],
+                                            data['gradeLevel'],
+                                            data['phoneNumber'],
+                                            data['emailAddress'],
+                                            icon: checkedIn
+                                                ? const Icon(
+                                                    Icons.check_circle,
+                                                    color: successColor,
+                                                  )
+                                                : Icon(
+                                                    Icons.check_circle_outline,
+                                                    color: palette[6],
+                                                  ),
+                                          ),
+                                          onTap: () {
+                                            var signedUpMember = SignedUpMembers(
+                                              uid: data['objectID'],
+                                              fullName: data['fullName'],
+                                              gradeLevel: data['gradeLevel'],
+                                              phoneNumber: data['phoneNumber'],
+                                              emailAddress: data['emailAddress'],
+                                              raised: 0,
+                                            );
+
+                                            setState(() {
+                                              if (!checkedIn) {
+                                                FirebaseService.instance.signUpToEvent(signedUpMember, event.id);
+                                              } else {
+                                                FirebaseService.instance.cancelVolunteerEvent(signedUpMember, event.id);
+                                              }
+
+                                              checkedIn = event.signUpsId!.contains(data['objectID']);
+                                              log(event.signUpsId!.toString());
+                                              log(checkedIn.toString());
+                                            });
+                                          },
+                                        ),
+                                      );
+                                    });
                                   },
                                 ),
                               ),
-                            ),
-                            SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                                childCount: _results.length,
-                                (context, index) {
-                                  var data = _results[index].data;
-                                  return Padding(
-                                    padding: hPad,
-                                    child: InkWell(
-                                      child: MemberItem(
-                                        data['objectID'],
-                                        data['fullName'],
-                                        data['homeroom'],
-                                        data['gradeLevel'],
-                                        data['phoneNumber'],
-                                        data['emailAddress'],
-                                        icon: Icons.check,
-                                      ),
-                                      onTap: () {},
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         );
                       },
                     );

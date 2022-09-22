@@ -485,6 +485,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
                                       "start": start,
                                       "end": end,
                                       "pointReward": pointReward,
+                                      "signUpsId": [],
+                                      "signUps": [],
                                     });
                                   }
 
