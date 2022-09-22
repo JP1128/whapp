@@ -18,11 +18,10 @@ class EventItem extends StatelessWidget {
             ? volunteerAvatar
             : const CircleAvatar());
 
-    bool isFull = event.capacity == event.signUpsId!.length;
+    bool isFull = event.capacity! <= event.signUpsId!.length;
     bool isSignedUp = event.signUpsId!.contains(uid);
 
     var border = null;
-    if (isFull) border = Border.all(color: errorColor.withAlpha(100), width: 3);
     if (isSignedUp) border = Border.all(color: successColor.withAlpha(100), width: 3);
 
     return Container(
@@ -77,6 +76,25 @@ class EventItem extends StatelessWidget {
                       )
                     ],
                   ),
+                  if (event.eventType == EventType.volunteer)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.people_outline,
+                          color: isFull ? errorColor.withAlpha(200) : palette[6],
+                          size: 15,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          "${event.signUpsId!.length} / ${event.capacity}",
+                          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                color: isFull ? errorColor.withAlpha(200) : palette[6],
+                              ),
+                        ),
+                      ],
+                    )
+
                   // Row(
                   //   crossAxisAlignment: CrossAxisAlignment.center,
                   //   children: [

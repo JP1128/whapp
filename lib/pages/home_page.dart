@@ -57,6 +57,7 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
+        type: BottomNavigationBarType.fixed,
         onTap: (i) {
           _pageController.animateToPage(
             i,
