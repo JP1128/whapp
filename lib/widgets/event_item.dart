@@ -18,7 +18,9 @@ class EventItem extends StatelessWidget {
             ? volunteerAvatar
             : const CircleAvatar());
 
-    bool isFull = event.capacity! <= event.signUpsId!.length;
+    bool isFull = event.eventType == EventType.volunteer //
+        ? event.capacity! <= event.signUpsId!.length
+        : false;
     bool isSignedUp = event.signUpsId!.contains(uid);
 
     var border = null;
