@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whapp/constants/theme.dart';
 import 'package:whapp/firebase_options.dart';
+import 'package:whapp/helpers/algolia_service.dart';
 import 'package:whapp/models/member.dart';
 import 'package:whapp/pages/home_page.dart';
 import 'package:whapp/pages/login_page.dart';

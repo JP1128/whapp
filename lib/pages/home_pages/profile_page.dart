@@ -47,7 +47,6 @@ class _ProfilePageState extends State<ProfilePage> {
     var profileName = profileOwner.fullName.split(" ");
 
     var firstName = profileName.first;
-    var initials = initial(profileOwner.fullName);
 
     var tShirtReceived = profileOwner.tShirtReceived!;
     var duesPaid = profileOwner.duesPaid!;

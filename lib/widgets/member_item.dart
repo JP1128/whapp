@@ -9,7 +9,8 @@ class MemberItem extends StatelessWidget {
     this.homeroom,
     this.gradeLevel,
     this.phoneNumber,
-    this.emailAddress, {
+    this.emailAddress,
+    this.role, {
     Key? key,
     this.icon = const Icon(Icons.arrow_forward_ios_outlined),
   }) : super(key: key);
@@ -20,6 +21,7 @@ class MemberItem extends StatelessWidget {
   final String gradeLevel;
   final String phoneNumber;
   final String emailAddress;
+  final int role;
 
   final Icon icon;
 

@@ -50,7 +50,9 @@ class _DirectoryPageState extends State<DirectoryPage> {
 
                 await query
                     .getObjects() //
-                    .then((value) => setState(() => _results = value.hits));
+                    .then((value) => setState(() {
+                          _results = value.hits;
+                        }));
               },
             ),
           ),
@@ -70,6 +72,7 @@ class _DirectoryPageState extends State<DirectoryPage> {
                     data['gradeLevel'],
                     data['phoneNumber'],
                     data['emailAddress'],
+                    data['role'],
                   ),
                   onTap: () {
                     Navigator.of(context, rootNavigator: true).push(

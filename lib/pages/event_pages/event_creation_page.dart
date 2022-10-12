@@ -427,6 +427,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
                                 ),
                                 validator: FormBuilderValidators.compose(
                                   [
+                                    FormBuilderValidators.required(),
                                     FormBuilderValidators.numeric(errorText: "The input must be numeric"),
                                     FormBuilderValidators.min(0, errorText: "The number must be at least 0")
                                   ],

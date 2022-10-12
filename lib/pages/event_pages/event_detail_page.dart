@@ -12,6 +12,7 @@ import 'package:whapp/helpers/algolia_service.dart';
 import 'package:whapp/helpers/helper.dart';
 import 'package:whapp/models/event.dart';
 import 'package:whapp/models/member.dart';
+import 'package:whapp/pages/event_pages/attendance_check_in_page.dart';
 import 'package:whapp/pages/home_pages/profile_page.dart';
 import 'package:whapp/services/firebase_service.dart';
 import 'package:whapp/widgets/member_item.dart';
@@ -517,7 +518,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                                       Icons.check_circle_outline,
                                       color: successColor,
                                     ),
-                                  ]
+                                  ],
                                 ],
                               ),
                               Text(
@@ -677,6 +678,14 @@ class _EventDetailPageState extends State<EventDetailPage> {
               Expanded(
                 child: FloatingActionButton.extended(
                   onPressed: () {
+                    Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(builder: (context) {
+                      return StreamProvider.value(
+                        value: FirebaseService.instance.streamEvent(event.id),
+                        initialData: event,
+                        child: AttendanceCheckInPage(),
+                      );
+                    }));
+                    /*
                     showBarModalBottomSheet(
                       context: context,
                       builder: (context) {
@@ -731,6 +740,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                                             data['gradeLevel'],
                                             data['phoneNumber'],
                                             data['emailAddress'],
+                                            data['role'],
                                             icon: checkedIn
                                                 ? const Icon(
                                                     Icons.check_circle,
@@ -774,6 +784,7 @@ class _EventDetailPageState extends State<EventDetailPage> {
                         );
                       },
                     );
+                    */
                   },
                   label: const Text("Check In"),
                 ),
