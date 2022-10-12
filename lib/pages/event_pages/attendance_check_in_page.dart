@@ -116,9 +116,26 @@ class _AttendanceCheckInPageState extends State<AttendanceCheckInPage> {
 
                             setState(() {
                               if (!checkedIn) {
+                                var startTime = TimeOfDay.fromDateTime(event.start);
+                                var endTime = TimeOfDay.fromDateTime(event.end);
+
+                                var minutes = minuteFromTimeOfDay(startTime, endTime);
+
                                 FirebaseService.instance.signUpToEvent(signedUpMember, event.id);
-                              } else {
-                                FirebaseService.instance.cancelVolunteerEvent(signedUpMember, event.id);
+                                FirebaseService.instance.updateMemberPMC(
+                                  signedUpMember.uid,
+                                  points: event.pointReward!,
+                                  minutes: minutes,
+                                );
+                                FirebaseService.instance.createHistory(
+                                  signedUpMember.uid,
+                                  event: event,
+                                  in_: startTime,
+                                  out: endTime,
+                                  message: "Attended in the event.",
+                                  pointsEarned: event.pointReward!,
+                                  minutesEarned: minutes,
+                                );
                               }
 
                               checkedIn = event.signUpsId!.contains(data['objectID']);
